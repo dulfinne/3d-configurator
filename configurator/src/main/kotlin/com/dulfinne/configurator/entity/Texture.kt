@@ -1,0 +1,37 @@
+package com.dulfinne.configurator.entity
+
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToOne
+import jakarta.persistence.Table
+import java.util.UUID
+
+@Entity
+@Table(name = "textures")
+class Texture(
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "uuid")
+    var uuid: UUID?,
+
+    @Column(name = "name", unique = true,nullable = false)
+    var name: String,
+
+    @Column(name = "base_texture_url", nullable = false)
+    var baseTextureUrl: String,
+
+    @Column(name = "alpha_map_url")
+    var alphaMapUrl: String?,
+
+    @Column(name = "bump_map_url")
+    var bumpMapUrl: String?,
+
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "properties_uuid", referencedColumnName = "uuid",nullable = false)
+    var properties: TextureProperties,
+)
