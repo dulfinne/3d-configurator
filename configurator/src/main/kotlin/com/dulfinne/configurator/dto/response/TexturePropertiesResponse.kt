@@ -3,7 +3,7 @@ package com.dulfinne.configurator.dto.response
 import java.util.UUID
 
 data class TexturePropertiesResponse(
-    val uuid: UUID?,
+    val id: UUID?,
 
     val bumpScale: Double?,
 

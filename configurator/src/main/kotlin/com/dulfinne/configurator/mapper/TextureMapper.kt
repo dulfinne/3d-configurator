@@ -5,21 +5,23 @@ import com.dulfinne.configurator.dto.response.TextureResponse
 import com.dulfinne.configurator.entity.Texture
 
 fun Texture.toResponse(): TextureResponse = TextureResponse(
-    uuid = uuid!!,
+    id = id,
     name = name,
     baseTextureUrl = baseTextureUrl,
     alphaMapUrl = alphaMapUrl,
     bumpMapUrl = bumpMapUrl,
-    properties = properties.toResponse()
+    properties = properties.toResponse(),
+    icon = icon.toResponse(),
 )
 
 fun TextureRequest.toEntity(): Texture = Texture(
-    uuid = null,
+    id = null,
     name = name,
     baseTextureUrl = baseTextureUrl,
     alphaMapUrl = alphaMapUrl,
     bumpMapUrl = bumpMapUrl,
-    properties = properties.toEntity()
+    properties = properties.toEntity(),
+    icon = icon.toEntity(),
 )
 
 fun Texture.updateFromRequest(updateRequest: TextureRequest) {
@@ -28,6 +30,7 @@ fun Texture.updateFromRequest(updateRequest: TextureRequest) {
     this.alphaMapUrl = updateRequest.alphaMapUrl
     this.bumpMapUrl = updateRequest.bumpMapUrl
     this.properties.updateFromRequest(updateRequest.properties)
+    this.icon.updateFromRequest(updateRequest.icon)
 }
 
 

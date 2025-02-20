@@ -1,9 +1,11 @@
 package com.dulfinne.configurator.controller
 
+import com.dulfinne.configurator.controller.api.TextureApi
 import com.dulfinne.configurator.dto.request.TextureRequest
 import com.dulfinne.configurator.dto.response.PaginatedResponse
 import com.dulfinne.configurator.dto.response.TextureResponse
 import com.dulfinne.configurator.service.TextureService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -19,10 +21,10 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1/textures")
-class TextureController(val textureService: TextureService) {
+class TextureController(val textureService: TextureService) : TextureApi {
 
-    @GetMapping()
-    fun getAllTextures(
+    @GetMapping
+    override fun getAllTextures(
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "6") size: Int
     ): PaginatedResponse<TextureResponse> {
@@ -30,30 +32,36 @@ class TextureController(val textureService: TextureService) {
         return textureResponsePage;
     }
 
-    @GetMapping("/{uuid}")
-    fun getTexture(@PathVariable uuid: UUID): TextureResponse {
-        val textureResponse = textureService.getTextureByUUID(uuid)
+    @GetMapping("/{id}")
+    override fun getTexture(@PathVariable id: UUID): TextureResponse {
+        val textureResponse = textureService.getTextureById(id)
+        return textureResponse;
+    }
+
+    @GetMapping("/icon/{id}")
+    override fun getTextureByIconId(@PathVariable id: UUID): TextureResponse {
+        val textureResponse = textureService.getTextureByIconId(id)
         return textureResponse;
     }
 
     @PostMapping
-    fun saveTexture(@RequestBody request: TextureRequest): ResponseEntity<TextureResponse> {
+    override fun saveTexture(@Valid @RequestBody request: TextureRequest): ResponseEntity<TextureResponse> {
         val textureResponse = textureService.createTexture(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(textureResponse)
     }
 
     @PutMapping("/{uuid}")
-    fun updateTexture(
+    override fun updateTexture(
         @PathVariable uuid: UUID,
-        @RequestBody request: TextureRequest
+        @Valid @RequestBody request: TextureRequest
     ): TextureResponse {
         val textureResponse = textureService.updateTexture(uuid, request)
         return textureResponse;
     }
 
     @DeleteMapping("/{uuid}")
-    fun deleteTexture(@PathVariable uuid: UUID): ResponseEntity<Unit> {
-        textureService.deleteTextureByUUID(uuid);
+    override fun deleteTexture(@PathVariable uuid: UUID): ResponseEntity<Unit> {
+        textureService.deleteTextureById(uuid);
         return ResponseEntity.noContent().build()
     }
 }

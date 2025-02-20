@@ -9,22 +9,20 @@ import jakarta.persistence.Table
 import java.util.UUID
 
 @Entity
-@Table(name = "texture_properties")
-class TextureProperties(
+@Table(name = "icons")
+class Icon(
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     var id: UUID?,
 
-    @Column(name = "bump_scale")
-    var bumpScale: Double?,
+    @Column(name = "name", unique = true, nullable = false)
+    var name: String,
 
-    @Column(name = "metalness", nullable = false)
-    var metalness: Double,
+    @Column(name = "url", nullable = false)
+    var url: String,
 
-    @Column(name = "roughness", nullable = false)
-    var roughness: Double,
-
-    @Column(name = "emissive_intensity")
-    var emissiveIntensity: Double?,
+    @Column(name = "type", nullable = false)
+    var type: Int,
 )

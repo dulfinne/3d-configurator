@@ -8,8 +8,10 @@ import com.dulfinne.configurator.mapper.toEntity
 import com.dulfinne.configurator.mapper.toPaginatedResponse
 import com.dulfinne.configurator.mapper.toResponse
 import com.dulfinne.configurator.mapper.updateFromRequest
+import com.dulfinne.configurator.repository.IconRepository
 import com.dulfinne.configurator.repository.TextureRepository
 import com.dulfinne.configurator.service.TextureService
+import com.dulfinne.configurator.util.ExceptionMessages
 import jakarta.persistence.EntityExistsException
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.data.domain.PageRequest
@@ -19,7 +21,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
-class TextureServiceImpl(val textureRepository: TextureRepository) : TextureService {
+class TextureServiceImpl(val textureRepository: TextureRepository, val iconRepository: IconRepository) :
+    TextureService {
 
     @Transactional(readOnly = true)
     override fun getAllTextures(page: Int, size: Int): PaginatedResponse<TextureResponse> {
@@ -28,8 +31,14 @@ class TextureServiceImpl(val textureRepository: TextureRepository) : TextureServ
     }
 
     @Transactional(readOnly = true)
-    override fun getTextureByUUID(uuid: UUID): TextureResponse {
-        val texture = getTextureIfExists(uuid)
+    override fun getTextureById(id: UUID): TextureResponse {
+        val texture = getTextureIfExists(id)
+        return texture.toResponse()
+    }
+
+    @Transactional(readOnly = true)
+    override fun getTextureByIconId(id: UUID): TextureResponse {
+        val texture = getTextureIfExistsByIconId(id)
         return texture.toResponse()
     }
 
@@ -37,14 +46,17 @@ class TextureServiceImpl(val textureRepository: TextureRepository) : TextureServ
     override fun createTexture(request: TextureRequest): TextureResponse {
         var texture = request.toEntity()
         checkNameUniqueness(texture.name)
+        checkIconNameUniqueness(texture.icon.name)
+
         texture = textureRepository.save(texture)
         return texture.toResponse()
     }
 
     @Transactional
-    override fun updateTexture(uuid: UUID, request: TextureRequest): TextureResponse {
-        var texture = getTextureIfExists(uuid)
+    override fun updateTexture(id: UUID, request: TextureRequest): TextureResponse {
+        var texture = getTextureIfExists(id)
         checkNameUniqueness(request.name, texture.name)
+        checkIconNameUniqueness(request.icon.name, texture.icon.name)
         texture.updateFromRequest(request)
 
         texture = textureRepository.save(texture)
@@ -52,24 +64,42 @@ class TextureServiceImpl(val textureRepository: TextureRepository) : TextureServ
     }
 
     @Transactional
-    override fun deleteTextureByUUID(uuid: UUID) {
-        val texture = getTextureIfExists(uuid)
+    override fun deleteTextureById(id: UUID) {
+        val texture = getTextureIfExists(id)
         textureRepository.delete(texture)
     }
 
-    private fun getTextureIfExists(uuid: UUID): Texture {
-        return textureRepository.findByIdOrNull(uuid) ?: throw EntityNotFoundException("Texture not found: $uuid")
+    private fun getTextureIfExists(id: UUID): Texture {
+        return textureRepository.findByIdOrNull(id)
+            ?: throw EntityNotFoundException(ExceptionMessages.TEXTURE_NOT_FOUND_ID.format(id))
+    }
+
+    private fun getTextureIfExistsByIconId(id: UUID): Texture {
+        return textureRepository.findByIconId(id)
+            ?: throw EntityNotFoundException(ExceptionMessages.TEXTURE_NOT_FOUND_ICON_ID.format(id))
     }
 
     private fun checkNameUniqueness(name: String) {
         textureRepository.findByName(name)?.let {
-            throw EntityExistsException("Texture with name '$name' already exists")
+            throw EntityExistsException(ExceptionMessages.TEXTURE_EXISTS_NAME.format(name))
         }
     }
 
     private fun checkNameUniqueness(newName: String, currentName: String) {
         if (!newName.equals(currentName, ignoreCase = true)) {
             checkNameUniqueness(newName)
+        }
+    }
+
+    private fun checkIconNameUniqueness(name: String) {
+        iconRepository.findByName(name)?.let {
+            throw EntityExistsException(ExceptionMessages.ICON_EXISTS_NAME.format(name))
+        }
+    }
+
+    private fun checkIconNameUniqueness(newName: String, currentName: String) {
+        if (!newName.equals(currentName, ignoreCase = true)) {
+            checkIconNameUniqueness(newName)
         }
     }
 }

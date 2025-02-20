@@ -1,0 +1,3 @@
+ALTER TABLE textures DROP CONSTRAINT IF EXISTS fk_icon_id;
+
+DROP TABLE IF EXISTS icons;

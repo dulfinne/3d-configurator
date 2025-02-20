@@ -7,8 +7,9 @@ import java.util.UUID
 
 interface TextureService {
     fun getAllTextures(page: Int, size: Int): PaginatedResponse<TextureResponse>
-    fun getTextureByUUID(uuid: UUID): TextureResponse
+    fun getTextureById(id: UUID): TextureResponse
+    fun getTextureByIconId(id: UUID): TextureResponse
     fun createTexture(request: TextureRequest): TextureResponse
-    fun updateTexture(uuid: UUID, request: TextureRequest): TextureResponse
-    fun deleteTextureByUUID(uuid: UUID)
+    fun updateTexture(id: UUID, request: TextureRequest): TextureResponse
+    fun deleteTextureById(id: UUID)
 }

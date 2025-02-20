@@ -6,6 +6,7 @@
                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <include file="01-changeset-properties-table.xml" relativeToChangelogFile="true"/>
-    <include file="10-changeset-texture-table.xml" relativeToChangelogFile="true"/>
+    <include file="10-changeset-icons-table.xml" relativeToChangelogFile="true"/>
+    <include file="20-changeset-textures-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

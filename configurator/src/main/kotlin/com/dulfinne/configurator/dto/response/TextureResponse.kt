@@ -3,7 +3,7 @@ package com.dulfinne.configurator.dto.response
 import java.util.UUID
 
 data class TextureResponse(
-    val uuid: UUID,
+    val id: UUID?,
 
     val name: String,
 
@@ -13,5 +13,6 @@ data class TextureResponse(
 
     val bumpMapUrl: String?,
 
-    val properties: TexturePropertiesResponse
+    val properties: TexturePropertiesResponse,
+    val icon: IconResponse,
 )

@@ -16,8 +16,8 @@ import java.util.UUID
 class Texture(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid")
-    var uuid: UUID?,
+    @Column(name = "id")
+    var id: UUID?,
 
     @Column(name = "name", unique = true,nullable = false)
     var name: String,
@@ -32,6 +32,10 @@ class Texture(
     var bumpMapUrl: String?,
 
     @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "properties_uuid", referencedColumnName = "uuid",nullable = false)
+    @JoinColumn(name = "properties_id", referencedColumnName = "id",nullable = false)
     var properties: TextureProperties,
+
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "icon_id", referencedColumnName = "id", nullable = false)
+    var icon: Icon
 )

@@ -1,0 +1,30 @@
+name: 3d-configurator
+
+services:
+  configurator_db:
+    image: postgres:17.0
+    container_name: configurator_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "db"
+      POSTGRES_PASSWORD: "123"
+      POSTGRES_DB: "configurator_db"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  configurator-service:
+    container_name: configurator-service
+    image: dulfinne/configurator-service:1.0
+    ports:
+      - "8090:8090"
+    environment:
+      PG_URL: jdbc:postgresql://configurator_db:5432
+      PG_USERNAME: "db"
+      PG_PASSWORD: "123"
+    depends_on:
+      - configurator_db
+
+volumes:
+  postgres_data:
+    driver: local
