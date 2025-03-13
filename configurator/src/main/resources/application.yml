@@ -17,6 +17,17 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
+minio:
+  bucket: texture
+  publicUrl: http://localhost:9000
+  url: http://localhost:9000
+  accessKey: admin
+  secretKey: password
+
+scheduler:
+  link-updating:
+    cron: 0 0 0 * * 0
+
 springdoc:
   api-docs:
     path: /docs/v3/api-docs

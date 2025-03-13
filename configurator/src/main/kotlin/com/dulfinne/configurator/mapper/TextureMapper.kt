@@ -17,18 +17,18 @@ fun Texture.toResponse(): TextureResponse = TextureResponse(
 fun TextureRequest.toEntity(): Texture = Texture(
     id = null,
     name = name,
-    baseTextureUrl = baseTextureUrl,
-    alphaMapUrl = alphaMapUrl,
-    bumpMapUrl = bumpMapUrl,
+    baseTextureUrl = "",
+    alphaMapUrl = "",
+    bumpMapUrl = "",
     properties = properties.toEntity(),
     icon = icon.toEntity(),
 )
 
 fun Texture.updateFromRequest(updateRequest: TextureRequest) {
     this.name = updateRequest.name
-    this.baseTextureUrl = updateRequest.baseTextureUrl
-    this.alphaMapUrl = updateRequest.alphaMapUrl
-    this.bumpMapUrl = updateRequest.bumpMapUrl
+    this.baseTextureUrl = ""
+    this.alphaMapUrl = ""
+    this.bumpMapUrl = ""
     this.properties.updateFromRequest(updateRequest.properties)
     this.icon.updateFromRequest(updateRequest.icon)
 }
