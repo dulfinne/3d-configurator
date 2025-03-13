@@ -11,12 +11,22 @@ data class TextureRequest(
     @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
     val name: String,
 
-   @field:NotNull(message = ValidationMessages.URL_REQUIRED)
+    @field:NotNull(message = ValidationMessages.URL_REQUIRED)
     val baseTexture: MultipartFile,
 
     val alphaMap: MultipartFile?,
 
     val bumpMap: MultipartFile?,
+
+    val normalMap: MultipartFile?,
+
+    val metalnessMap: MultipartFile?,
+
+    val roughnessMap: MultipartFile?,
+
+    val aoMap: MultipartFile?,
+
+    val displacementMap: MultipartFile?,
 
     @field:Valid
     val properties: TexturePropertiesRequest,

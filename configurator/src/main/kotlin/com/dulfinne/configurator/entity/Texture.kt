@@ -31,6 +31,21 @@ class Texture(
     @Column(name = "bump_map_url")
     var bumpMapUrl: String?,
 
+    @Column(name = "normal_map_url")
+    var normalMapUrl: String?,
+
+    @Column(name = "metalness_map_url")
+    var metalnessMapUrl: String?,
+
+    @Column(name = "roughness_map_url")
+    var roughnessMapUrl: String?,
+
+    @Column(name = "ao_map_url")
+    var aoMapUrl: String?,
+
+    @Column(name = "displacement_map_url")
+    var displacementMapUrl: String?,
+
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "properties_id", referencedColumnName = "id",nullable = false)
     var properties: TextureProperties,

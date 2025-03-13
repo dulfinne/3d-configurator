@@ -13,6 +13,17 @@ data class TextureResponse(
 
     val bumpMapUrl: String?,
 
+    val normalMapUrl: String?,
+
+    val metalnessMapUrl: String?,
+
+    val roughnessMapUrl: String?,
+
+    val aoMapUrl: String?,
+
+    val displacementMapUrl: String?,
+
     val properties: TexturePropertiesResponse,
+
     val icon: IconResponse,
 )

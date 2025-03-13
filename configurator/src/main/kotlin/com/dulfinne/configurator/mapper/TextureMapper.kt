@@ -10,6 +10,11 @@ fun Texture.toResponse(): TextureResponse = TextureResponse(
     baseTextureUrl = baseTextureUrl,
     alphaMapUrl = alphaMapUrl,
     bumpMapUrl = bumpMapUrl,
+    normalMapUrl = normalMapUrl,
+    metalnessMapUrl = metalnessMapUrl,
+    roughnessMapUrl = roughnessMapUrl,
+    aoMapUrl = aoMapUrl,
+    displacementMapUrl = displacementMapUrl,
     properties = properties.toResponse(),
     icon = icon.toResponse(),
 )
@@ -18,8 +23,13 @@ fun TextureRequest.toEntity(): Texture = Texture(
     id = null,
     name = name,
     baseTextureUrl = "",
-    alphaMapUrl = "",
-    bumpMapUrl = "",
+    alphaMapUrl = null,
+    bumpMapUrl = null,
+    normalMapUrl = null,
+    metalnessMapUrl = null,
+    roughnessMapUrl = null,
+    aoMapUrl = null,
+    displacementMapUrl = null,
     properties = properties.toEntity(),
     icon = icon.toEntity(),
 )
@@ -27,8 +37,13 @@ fun TextureRequest.toEntity(): Texture = Texture(
 fun Texture.updateFromRequest(updateRequest: TextureRequest) {
     this.name = updateRequest.name
     this.baseTextureUrl = ""
-    this.alphaMapUrl = ""
-    this.bumpMapUrl = ""
+    this.alphaMapUrl = null
+    this.bumpMapUrl = null
+    this.normalMapUrl = null
+    this.metalnessMapUrl = null
+    this.roughnessMapUrl = null
+    this.aoMapUrl = null
+    this.displacementMapUrl = null
     this.properties.updateFromRequest(updateRequest.properties)
     this.icon.updateFromRequest(updateRequest.icon)
 }

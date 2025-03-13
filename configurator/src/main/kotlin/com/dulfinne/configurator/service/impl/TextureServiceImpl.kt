@@ -83,14 +83,24 @@ class TextureServiceImpl(
     override fun deleteTextureById(id: UUID) {
         val texture = getTextureIfExists(id)
         textureRepository.delete(texture)
-        deleteImagesFromStorage(texture.name, texture.icon.name)
+        deleteAllImagesFromStorage(texture.name, texture.icon.name)
+
     }
 
-    private fun deleteImagesFromStorage(textureName: String, iconName: String) {
+    private fun deleteAllImagesFromStorage(textureName: String, iconName: String) {
+        deleteMapImagesFromStorage(textureName)
+        imageService.deleteImage(BucketNames.ICON_BUCKET, iconName)
+    }
+
+    private fun deleteMapImagesFromStorage(textureName: String) {
         imageService.deleteImage(BucketNames.TEXTURE_BUCKET, textureName)
         imageService.deleteImage(BucketNames.BUMP_MAP_BUCKET, textureName)
         imageService.deleteImage(BucketNames.ALPHA_MAP_BUCKET, textureName)
-        imageService.deleteImage(BucketNames.ICON_BUCKET, iconName)
+        imageService.deleteImage(BucketNames.NORMAL_BUCKET, textureName)
+        imageService.deleteImage(BucketNames.METALNESS_BUCKET, textureName)
+        imageService.deleteImage(BucketNames.ROUGHNESS_BUCKET, textureName)
+        imageService.deleteImage(BucketNames.AO_BUCKET, textureName)
+        imageService.deleteImage(BucketNames.DISPLACEMENT_BUCKET, textureName)
     }
 
     private fun deleteOldImagesIfNeeded(
@@ -103,9 +113,7 @@ class TextureServiceImpl(
         val iconNameChanged = currentIconName != newIconName
 
         if (nameChanged) {
-            imageService.deleteImage(BucketNames.TEXTURE_BUCKET, currentTextureName)
-            imageService.deleteImage(BucketNames.BUMP_MAP_BUCKET, currentTextureName)
-            imageService.deleteImage(BucketNames.ALPHA_MAP_BUCKET, currentTextureName)
+            deleteMapImagesFromStorage(currentTextureName)
         }
 
         if (iconNameChanged) {
@@ -118,12 +126,26 @@ class TextureServiceImpl(
         val bumpMapUrl = request.bumpMap?.let { imageService.uploadImage(BucketNames.BUMP_MAP_BUCKET, textureName, it) }
         val alphaMapUrl =
             request.alphaMap?.let { imageService.uploadImage(BucketNames.ALPHA_MAP_BUCKET, textureName, it) }
+        val normalMapUrl =
+            request.normalMap?.let { imageService.uploadImage(BucketNames.NORMAL_BUCKET, textureName, it) }
+        val roughnessMapUrl =
+            request.roughnessMap?.let { imageService.uploadImage(BucketNames.ROUGHNESS_BUCKET, textureName, it) }
+        val metalnessMapUrl =
+            request.metalnessMap?.let { imageService.uploadImage(BucketNames.METALNESS_BUCKET, textureName, it) }
+        val aoMapUrl = request.aoMap?.let { imageService.uploadImage(BucketNames.AO_BUCKET, textureName, it) }
+        val displacementMapUrl =
+            request.displacementMap?.let { imageService.uploadImage(BucketNames.DISPLACEMENT_BUCKET, textureName, it) }
         val iconUrl = imageService.uploadImage(BucketNames.ICON_BUCKET, iconName, request.icon.icon)
 
         texture.apply {
             this.baseTextureUrl = baseTextureUrl
             this.bumpMapUrl = bumpMapUrl
             this.alphaMapUrl = alphaMapUrl
+            this.normalMapUrl = normalMapUrl
+            this.roughnessMapUrl = roughnessMapUrl
+            this.metalnessMapUrl = metalnessMapUrl
+            this.aoMapUrl = aoMapUrl
+            this.displacementMapUrl = displacementMapUrl
             this.icon.url = iconUrl
         }
     }
