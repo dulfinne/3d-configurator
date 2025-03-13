@@ -10,7 +10,9 @@ import com.dulfinne.configurator.mapper.toResponse
 import com.dulfinne.configurator.mapper.updateFromRequest
 import com.dulfinne.configurator.repository.IconRepository
 import com.dulfinne.configurator.repository.TextureRepository
+import com.dulfinne.configurator.service.ImageService
 import com.dulfinne.configurator.service.TextureService
+import com.dulfinne.configurator.util.BucketNames
 import com.dulfinne.configurator.util.ExceptionMessages
 import jakarta.persistence.EntityExistsException
 import jakarta.persistence.EntityNotFoundException
@@ -21,8 +23,11 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
-class TextureServiceImpl(val textureRepository: TextureRepository, val iconRepository: IconRepository) :
-    TextureService {
+class TextureServiceImpl(
+    val textureRepository: TextureRepository,
+    val iconRepository: IconRepository,
+    val imageService: ImageService
+) : TextureService {
 
     @Transactional(readOnly = true)
     override fun getAllTextures(page: Int, size: Int): PaginatedResponse<TextureResponse> {
@@ -48,6 +53,8 @@ class TextureServiceImpl(val textureRepository: TextureRepository, val iconRepos
         checkNameUniqueness(texture.name)
         checkIconNameUniqueness(texture.icon.name)
 
+        uploadImages(texture, request, request.name, request.icon.name)
+
         texture = textureRepository.save(texture)
         return texture.toResponse()
     }
@@ -55,9 +62,18 @@ class TextureServiceImpl(val textureRepository: TextureRepository, val iconRepos
     @Transactional
     override fun updateTexture(id: UUID, request: TextureRequest): TextureResponse {
         var texture = getTextureIfExists(id)
-        checkNameUniqueness(request.name, texture.name)
-        checkIconNameUniqueness(request.icon.name, texture.icon.name)
+
+        val currentTextureName = texture.name
+        val newTextureName = request.name
+        val currentIconName = texture.icon.name
+        val newIconName = request.icon.name
+
+        checkNameUniqueness(newTextureName, currentTextureName)
+        checkIconNameUniqueness(newIconName, currentIconName)
         texture.updateFromRequest(request)
+
+        deleteOldImagesIfNeeded(currentTextureName, currentIconName, newTextureName, newIconName)
+        uploadImages(texture, request, newTextureName, newIconName)
 
         texture = textureRepository.save(texture)
         return texture.toResponse()
@@ -67,6 +83,49 @@ class TextureServiceImpl(val textureRepository: TextureRepository, val iconRepos
     override fun deleteTextureById(id: UUID) {
         val texture = getTextureIfExists(id)
         textureRepository.delete(texture)
+        deleteImagesFromStorage(texture.name, texture.icon.name)
+    }
+
+    private fun deleteImagesFromStorage(textureName: String, iconName: String) {
+        imageService.deleteImage(BucketNames.TEXTURE_BUCKET, textureName)
+        imageService.deleteImage(BucketNames.BUMP_MAP_BUCKET, textureName)
+        imageService.deleteImage(BucketNames.ALPHA_MAP_BUCKET, textureName)
+        imageService.deleteImage(BucketNames.ICON_BUCKET, iconName)
+    }
+
+    private fun deleteOldImagesIfNeeded(
+        currentTextureName: String,
+        currentIconName: String,
+        newTextureName: String,
+        newIconName: String
+    ) {
+        val nameChanged = currentTextureName != newTextureName
+        val iconNameChanged = currentIconName != newIconName
+
+        if (nameChanged) {
+            imageService.deleteImage(BucketNames.TEXTURE_BUCKET, currentTextureName)
+            imageService.deleteImage(BucketNames.BUMP_MAP_BUCKET, currentTextureName)
+            imageService.deleteImage(BucketNames.ALPHA_MAP_BUCKET, currentTextureName)
+        }
+
+        if (iconNameChanged) {
+            imageService.deleteImage(BucketNames.ICON_BUCKET, currentIconName)
+        }
+    }
+
+    private fun uploadImages(texture: Texture, request: TextureRequest, textureName: String, iconName: String) {
+        val baseTextureUrl = imageService.uploadImage(BucketNames.TEXTURE_BUCKET, textureName, request.baseTexture)
+        val bumpMapUrl = request.bumpMap?.let { imageService.uploadImage(BucketNames.BUMP_MAP_BUCKET, textureName, it) }
+        val alphaMapUrl =
+            request.alphaMap?.let { imageService.uploadImage(BucketNames.ALPHA_MAP_BUCKET, textureName, it) }
+        val iconUrl = imageService.uploadImage(BucketNames.ICON_BUCKET, iconName, request.icon.icon)
+
+        texture.apply {
+            this.baseTextureUrl = baseTextureUrl
+            this.bumpMapUrl = bumpMapUrl
+            this.alphaMapUrl = alphaMapUrl
+            this.icon.url = iconUrl
+        }
     }
 
     private fun getTextureIfExists(id: UUID): Texture {

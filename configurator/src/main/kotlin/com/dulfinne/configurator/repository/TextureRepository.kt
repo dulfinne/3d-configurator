@@ -14,8 +14,16 @@ interface TextureRepository : JpaRepository<Texture, UUID> {
     @Query(
         """SELECT t FROM Texture t 
        LEFT JOIN FETCH t.properties
-       LEFT JOIN FETCH t.icon""")
+       LEFT JOIN FETCH t.icon"""
+    )
     fun findAllWithProperties(pageable: PageRequest): Page<Texture>
+
+    @Query(
+        """SELECT t FROM Texture t 
+       LEFT JOIN FETCH t.properties
+       LEFT JOIN FETCH t.icon"""
+    )
+    fun findAllWithIcons(): List<Texture>
 
     fun findByName(name: String): Texture?
     fun findByIconId(id: UUID): Texture?

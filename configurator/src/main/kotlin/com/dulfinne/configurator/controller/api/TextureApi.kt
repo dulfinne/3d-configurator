@@ -16,10 +16,10 @@ import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
 
@@ -134,7 +134,7 @@ interface TextureApi {
     )
     @PostMapping
     fun saveTexture(
-        @Valid @RequestBody request: TextureRequest
+        @Valid @ModelAttribute request: TextureRequest
     ): ResponseEntity<TextureResponse>
 
     @Operation(
@@ -179,7 +179,7 @@ interface TextureApi {
     fun updateTexture(
         @Parameter(`in` = ParameterIn.PATH)
         @PathVariable uuid: UUID,
-        @Valid @RequestBody request: TextureRequest
+        @Valid @ModelAttribute request: TextureRequest
     ): TextureResponse
 
     @Operation(

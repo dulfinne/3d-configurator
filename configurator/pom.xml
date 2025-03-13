@@ -21,6 +21,8 @@
         <swagger.version>2.1.0</swagger.version>
         <swagger-core.version>1.6.10</swagger-core.version>
         <swagger-core-v3.version>2.2.8</swagger-core-v3.version>
+        <minio.version>8.5.17</minio.version>
+        <shedlock.version>5.13.0</shedlock.version>
     </properties>
 
     <dependencies>
@@ -99,6 +101,29 @@
             <groupId>io.swagger</groupId>
             <artifactId>swagger-core</artifactId>
             <version>${swagger-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-spring</artifactId>
+            <version>${shedlock.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
+            <version>${shedlock.version}</version>
         </dependency>
     </dependencies>
 

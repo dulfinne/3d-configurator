@@ -15,12 +15,12 @@ fun Icon.toResponse(): IconResponse = IconResponse(
 fun IconRequest.toEntity(): Icon = Icon(
     id = null,
     name = name,
-    url = url,
+    url = "",
     type = type?.id ?: IconType.UNKNOWN.id,
 )
 
 fun Icon.updateFromRequest(request: IconRequest) {
     this.name = request.name
-    this.url = request.url
+    this.url = ""
     this.type = request.type?.id ?: IconType.UNKNOWN.id
 }
