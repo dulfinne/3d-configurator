@@ -11,8 +11,11 @@ data class TextureRequest(
     @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
     val name: String,
 
-    @field:NotNull(message = ValidationMessages.URL_REQUIRED)
-    val baseTexture: MultipartFile,
+    @field:NotBlank(message = ValidationMessages.COLOR_REQUIRED)
+    val baseColor: String,
+
+    @field:NotNull(message = ValidationMessages.FILE_REQUIRED)
+    val baseTexture: MultipartFile?,
 
     val alphaMap: MultipartFile?,
 

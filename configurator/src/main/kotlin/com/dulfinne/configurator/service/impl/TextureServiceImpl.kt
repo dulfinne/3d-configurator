@@ -122,7 +122,7 @@ class TextureServiceImpl(
     }
 
     private fun uploadImages(texture: Texture, request: TextureRequest, textureName: String, iconName: String) {
-        val baseTextureUrl = imageService.uploadImage(BucketNames.TEXTURE_BUCKET, textureName, request.baseTexture)
+        val baseTextureUrl = imageService.uploadImage(BucketNames.TEXTURE_BUCKET, textureName, request.baseTexture!!)
         val bumpMapUrl = request.bumpMap?.let { imageService.uploadImage(BucketNames.BUMP_MAP_BUCKET, textureName, it) }
         val alphaMapUrl =
             request.alphaMap?.let { imageService.uploadImage(BucketNames.ALPHA_MAP_BUCKET, textureName, it) }

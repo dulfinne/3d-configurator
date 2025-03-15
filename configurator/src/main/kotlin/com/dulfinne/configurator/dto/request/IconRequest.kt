@@ -11,7 +11,7 @@ data class IconRequest(
     @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
     val name: String,
 
-    @field:NotNull(message = ValidationMessages.URL_REQUIRED)
+    @field:NotNull(message = ValidationMessages.FILE_REQUIRED)
     val icon: MultipartFile,
 
     @field:NotNull(message = ValidationMessages.TYPE_REQUIRED)

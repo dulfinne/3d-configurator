@@ -7,6 +7,7 @@ import com.dulfinne.configurator.entity.Texture
 fun Texture.toResponse(): TextureResponse = TextureResponse(
     id = id,
     name = name,
+    baseColor = baseColor,
     baseTextureUrl = baseTextureUrl,
     alphaMapUrl = alphaMapUrl,
     bumpMapUrl = bumpMapUrl,
@@ -22,6 +23,7 @@ fun Texture.toResponse(): TextureResponse = TextureResponse(
 fun TextureRequest.toEntity(): Texture = Texture(
     id = null,
     name = name,
+    baseColor = baseColor,
     baseTextureUrl = "",
     alphaMapUrl = null,
     bumpMapUrl = null,
@@ -36,6 +38,7 @@ fun TextureRequest.toEntity(): Texture = Texture(
 
 fun Texture.updateFromRequest(updateRequest: TextureRequest) {
     this.name = updateRequest.name
+    this.baseColor = updateRequest.baseColor
     this.baseTextureUrl = ""
     this.alphaMapUrl = null
     this.bumpMapUrl = null

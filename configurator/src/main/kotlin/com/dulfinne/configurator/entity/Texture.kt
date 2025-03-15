@@ -22,6 +22,9 @@ class Texture(
     @Column(name = "name", unique = true,nullable = false)
     var name: String,
 
+    @Column(name = "base_color", nullable = false)
+    var baseColor: String,
+
     @Column(name = "base_texture_url", nullable = false)
     var baseTextureUrl: String,
 

@@ -7,6 +7,8 @@ data class TextureResponse(
 
     val name: String,
 
+    val baseColor: String,
+
     val baseTextureUrl: String,
 
     val alphaMapUrl: String?,
