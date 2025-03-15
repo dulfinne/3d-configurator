@@ -88,7 +88,7 @@ class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioP
     private fun applyPublicPolicy(bucketName: String) {
         val policyJson = MinioConstants.PUBLIC_POLICY
             .trimIndent()
-            .replace(BucketNames.POLICY_BUCKET, bucketName)
+            .replace(BucketNames.POLICY_GENERATION_BUCKET, bucketName)
 
         minioClient.setBucketPolicy(
             SetBucketPolicyArgs.builder()

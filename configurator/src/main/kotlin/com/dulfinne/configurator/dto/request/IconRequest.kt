@@ -1,6 +1,6 @@
 package com.dulfinne.configurator.dto.request
 
-import com.dulfinne.configurator.entity.IconType
+import com.dulfinne.configurator.entity.enums.IconType
 import com.dulfinne.configurator.util.ValidationMessages
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull

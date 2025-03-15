@@ -2,7 +2,7 @@ package com.dulfinne.configurator.service.impl
 
 import com.dulfinne.configurator.dto.response.IconResponse
 import com.dulfinne.configurator.dto.response.PaginatedResponse
-import com.dulfinne.configurator.entity.IconType
+import com.dulfinne.configurator.entity.enums.IconType
 import com.dulfinne.configurator.mapper.toPaginatedResponse
 import com.dulfinne.configurator.mapper.toResponse
 import com.dulfinne.configurator.repository.IconRepository

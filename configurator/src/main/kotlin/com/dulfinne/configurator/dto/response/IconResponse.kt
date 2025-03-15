@@ -1,6 +1,6 @@
 package com.dulfinne.configurator.dto.response
 
-import com.dulfinne.configurator.entity.IconType
+import com.dulfinne.configurator.entity.enums.IconType
 import java.util.UUID
 
 data class IconResponse(

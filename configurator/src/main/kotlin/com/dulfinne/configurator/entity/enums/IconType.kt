@@ -1,4 +1,4 @@
-package com.dulfinne.configurator.entity
+package com.dulfinne.configurator.entity.enums
 
 enum class IconType(val id: Int) {
     UNKNOWN(0),
@@ -16,7 +16,5 @@ enum class IconType(val id: Int) {
             return entries.find { it.id == id }
                 ?: UNKNOWN
         }
-
-        fun getAllTypes(): List<String> = entries.map { it.name }
     }
 }

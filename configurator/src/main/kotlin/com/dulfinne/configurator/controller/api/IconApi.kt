@@ -2,7 +2,7 @@ package com.dulfinne.configurator.controller.api
 
 import com.dulfinne.configurator.dto.response.IconResponse
 import com.dulfinne.configurator.dto.response.PaginatedResponse
-import com.dulfinne.configurator.entity.IconType
+import com.dulfinne.configurator.entity.enums.IconType
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content

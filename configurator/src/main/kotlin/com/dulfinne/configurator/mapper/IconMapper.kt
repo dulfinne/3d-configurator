@@ -3,7 +3,7 @@ package com.dulfinne.configurator.mapper
 import com.dulfinne.configurator.dto.request.IconRequest
 import com.dulfinne.configurator.dto.response.IconResponse
 import com.dulfinne.configurator.entity.Icon
-import com.dulfinne.configurator.entity.IconType
+import com.dulfinne.configurator.entity.enums.IconType
 
 fun Icon.toResponse(): IconResponse = IconResponse(
     id = id,

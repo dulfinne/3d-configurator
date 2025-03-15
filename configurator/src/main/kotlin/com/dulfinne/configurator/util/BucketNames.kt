@@ -10,5 +10,7 @@ object BucketNames {
     const val AO_BUCKET = "ao-map"
     const val DISPLACEMENT_BUCKET = "displacement-map"
     const val ICON_BUCKET = "icon"
-    const val POLICY_BUCKET = "bucket-name"
+
+    const val DOCUMENTS_BUCKET = "documents"
+    const val POLICY_GENERATION_BUCKET = "bucket-name"
 }

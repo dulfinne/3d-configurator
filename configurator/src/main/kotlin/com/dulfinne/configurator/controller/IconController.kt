@@ -3,7 +3,7 @@ package com.dulfinne.configurator.controller
 import com.dulfinne.configurator.controller.api.IconApi
 import com.dulfinne.configurator.dto.response.IconResponse
 import com.dulfinne.configurator.dto.response.PaginatedResponse
-import com.dulfinne.configurator.entity.IconType
+import com.dulfinne.configurator.entity.enums.IconType
 import com.dulfinne.configurator.service.IconService
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
