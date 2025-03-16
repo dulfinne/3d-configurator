@@ -7,4 +7,5 @@ interface ImageService {
     fun deleteImage(bucketName: String, imageName: String)
     fun getPublicImageUrl(bucketName: String, imageName: String): String
     fun getSignedImageUrl(bucketName: String, objectName: String): String
+    fun renameFile(bucketName: String, newName: String, oldName: String, oldUrl: String?): String?
 }

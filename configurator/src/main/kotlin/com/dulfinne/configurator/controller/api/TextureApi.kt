@@ -1,6 +1,8 @@
 package com.dulfinne.configurator.controller.api
 
+import com.dulfinne.configurator.dto.request.NameRequest
 import com.dulfinne.configurator.dto.request.TextureRequest
+import com.dulfinne.configurator.dto.request.UpdateTextureRequest
 import com.dulfinne.configurator.dto.response.PaginatedResponse
 import com.dulfinne.configurator.dto.response.TextureResponse
 import com.dulfinne.configurator.exception.ErrorResponse
@@ -179,7 +181,51 @@ interface TextureApi {
     fun updateTexture(
         @Parameter(`in` = ParameterIn.PATH)
         @PathVariable uuid: UUID,
-        @Valid @ModelAttribute request: TextureRequest
+        @Valid @ModelAttribute request: UpdateTextureRequest
+    ): TextureResponse
+
+    @Operation(
+        summary = "Update texture name",
+    )
+    @ApiResponses(
+        ApiResponse(
+            responseCode = "200",
+            description = "Successfully updated texture name",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = TextureResponse::class)
+            )]
+        ),
+        ApiResponse(
+            responseCode = "404",
+            description = "Texture not found for the given ID",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ErrorResponse::class)
+            )]
+        ),
+        ApiResponse(
+            responseCode = "409",
+            description = "Texture name already exists",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ErrorResponse::class)
+            )]
+        ),
+        ApiResponse(
+            responseCode = "400",
+            description = "Invalid parameters",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ErrorResponse::class)
+            )]
+        )
+    )
+    @PutMapping("/{uuid}/name")
+    fun updateTextureName(
+        @Parameter(`in` = ParameterIn.PATH)
+        @PathVariable uuid: UUID,
+        @Valid @ModelAttribute request: NameRequest
     ): TextureResponse
 
     @Operation(

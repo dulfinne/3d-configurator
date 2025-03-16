@@ -24,6 +24,7 @@
         <minio.version>8.5.17</minio.version>
         <shedlock.version>5.13.0</shedlock.version>
         <spire-dock.version>5.3.2</spire-dock.version>
+        <tika-core.version>3.1.0</tika-core.version>
     </properties>
 
     <repositories>
@@ -140,6 +141,13 @@
             <artifactId>spire.doc.free</artifactId>
             <version>${spire-dock.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>${tika-core.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
