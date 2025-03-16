@@ -28,7 +28,8 @@ enum class ReplacementOption(val key: String, val displayName: String) {
     LEFT_MIRROR("leftMirror", "Слева"),
     HAVE_HAND("haveHand", "Да"),
     NO_HAND("noHand", "Нет"),
-    COMPOSITE("composite", "Составной");
+    COMPOSITE("composite", "Составной"),
+    UNIFIED("unified", "Объединённый");
 
     companion object {
         private val map = entries.associateBy(ReplacementOption::key)
