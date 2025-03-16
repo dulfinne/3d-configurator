@@ -1,7 +1,9 @@
 package com.dulfinne.configurator.controller
 
 import com.dulfinne.configurator.controller.api.TextureApi
+import com.dulfinne.configurator.dto.request.NameRequest
 import com.dulfinne.configurator.dto.request.TextureRequest
+import com.dulfinne.configurator.dto.request.UpdateTextureRequest
 import com.dulfinne.configurator.dto.response.PaginatedResponse
 import com.dulfinne.configurator.dto.response.TextureResponse
 import com.dulfinne.configurator.service.TextureService
@@ -55,9 +57,18 @@ class TextureController(val textureService: TextureService) : TextureApi {
     @PutMapping("/{uuid}")
     override fun updateTexture(
         @PathVariable uuid: UUID,
-        @Valid @ModelAttribute request: TextureRequest
+        @Valid @ModelAttribute request: UpdateTextureRequest
     ): TextureResponse {
         val textureResponse = textureService.updateTexture(uuid, request)
+        return textureResponse;
+    }
+
+    @PutMapping("/{uuid}/name")
+    override fun updateTextureName(
+        @PathVariable uuid: UUID,
+        @Valid @ModelAttribute request: NameRequest
+    ): TextureResponse {
+        val textureResponse = textureService.updateTextureName(uuid, request)
         return textureResponse;
     }
 

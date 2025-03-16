@@ -1,6 +1,8 @@
 package com.dulfinne.configurator.service.impl
 
+import com.dulfinne.configurator.dto.request.NameRequest
 import com.dulfinne.configurator.dto.request.TextureRequest
+import com.dulfinne.configurator.dto.request.UpdateTextureRequest
 import com.dulfinne.configurator.dto.response.PaginatedResponse
 import com.dulfinne.configurator.dto.response.TextureResponse
 import com.dulfinne.configurator.entity.Texture
@@ -20,6 +22,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @Service
@@ -53,29 +56,36 @@ class TextureServiceImpl(
         checkNameUniqueness(texture.name)
         checkIconNameUniqueness(texture.icon.name)
 
-        uploadImages(texture, request, request.name, request.icon.name)
+        saveImages(texture, request, request.name)
 
         texture = textureRepository.save(texture)
         return texture.toResponse()
     }
 
     @Transactional
-    override fun updateTexture(id: UUID, request: TextureRequest): TextureResponse {
+    override fun updateTexture(id: UUID, request: UpdateTextureRequest): TextureResponse {
         var texture = getTextureIfExists(id)
-
-        val currentTextureName = texture.name
-        val newTextureName = request.name
         val currentIconName = texture.icon.name
         val newIconName = request.icon.name
 
-        checkNameUniqueness(newTextureName, currentTextureName)
         checkIconNameUniqueness(newIconName, currentIconName)
         texture.updateFromRequest(request)
-
-        deleteOldImagesIfNeeded(currentTextureName, currentIconName, newTextureName, newIconName)
-        uploadImages(texture, request, newTextureName, newIconName)
+        uploadImagesIfNeeded(texture, request)
 
         texture = textureRepository.save(texture)
+        return texture.toResponse()
+    }
+
+    @Transactional
+    override fun updateTextureName(id: UUID, request: NameRequest): TextureResponse {
+        val texture = getTextureIfExists(id)
+
+        val oldName = texture.name
+        val newName = request.name
+        checkNameUniqueness(newName, oldName)
+        updateTextureFields(texture, newName, oldName)
+
+        textureRepository.save(texture)
         return texture.toResponse()
     }
 
@@ -83,15 +93,10 @@ class TextureServiceImpl(
     override fun deleteTextureById(id: UUID) {
         val texture = getTextureIfExists(id)
         textureRepository.delete(texture)
-        deleteAllImagesFromStorage(texture.name, texture.icon.name)
+        deleteAllImagesFromStorage(texture.name)
     }
 
-    private fun deleteAllImagesFromStorage(textureName: String, iconName: String) {
-        deleteMapImagesFromStorage(textureName)
-        imageService.deleteImage(BucketNames.ICON_BUCKET, iconName)
-    }
-
-    private fun deleteMapImagesFromStorage(textureName: String) {
+    private fun deleteAllImagesFromStorage(textureName: String) {
         imageService.deleteImage(BucketNames.TEXTURE_BUCKET, textureName)
         imageService.deleteImage(BucketNames.BUMP_MAP_BUCKET, textureName)
         imageService.deleteImage(BucketNames.ALPHA_MAP_BUCKET, textureName)
@@ -100,27 +105,10 @@ class TextureServiceImpl(
         imageService.deleteImage(BucketNames.ROUGHNESS_BUCKET, textureName)
         imageService.deleteImage(BucketNames.AO_BUCKET, textureName)
         imageService.deleteImage(BucketNames.DISPLACEMENT_BUCKET, textureName)
+        imageService.deleteImage(BucketNames.ICON_BUCKET, textureName)
     }
 
-    private fun deleteOldImagesIfNeeded(
-        currentTextureName: String,
-        currentIconName: String,
-        newTextureName: String,
-        newIconName: String
-    ) {
-        val nameChanged = currentTextureName != newTextureName
-        val iconNameChanged = currentIconName != newIconName
-
-        if (nameChanged) {
-            deleteMapImagesFromStorage(currentTextureName)
-        }
-
-        if (iconNameChanged) {
-            imageService.deleteImage(BucketNames.ICON_BUCKET, currentIconName)
-        }
-    }
-
-    private fun uploadImages(texture: Texture, request: TextureRequest, textureName: String, iconName: String) {
+    private fun saveImages(texture: Texture, request: TextureRequest, textureName: String) {
         val baseTextureUrl =
             request.baseTexture?.let { imageService.uploadImage(BucketNames.TEXTURE_BUCKET, textureName, it) }
         val bumpMapUrl = request.bumpMap?.let { imageService.uploadImage(BucketNames.BUMP_MAP_BUCKET, textureName, it) }
@@ -135,7 +123,7 @@ class TextureServiceImpl(
         val aoMapUrl = request.aoMap?.let { imageService.uploadImage(BucketNames.AO_BUCKET, textureName, it) }
         val displacementMapUrl =
             request.displacementMap?.let { imageService.uploadImage(BucketNames.DISPLACEMENT_BUCKET, textureName, it) }
-        val iconUrl = imageService.uploadImage(BucketNames.ICON_BUCKET, iconName, request.icon.icon)
+        val iconUrl = request.icon.icon?.let { imageService.uploadImage(BucketNames.ICON_BUCKET, textureName, it) }
 
         texture.apply {
             this.baseTextureUrl = baseTextureUrl
@@ -146,9 +134,65 @@ class TextureServiceImpl(
             this.metalnessMapUrl = metalnessMapUrl
             this.aoMapUrl = aoMapUrl
             this.displacementMapUrl = displacementMapUrl
-            this.icon.url = iconUrl
+            this.icon.url = iconUrl ?: ""
         }
     }
+
+    private fun uploadImagesIfNeeded(texture: Texture, request: UpdateTextureRequest) {
+        val textureName = texture.name
+        val baseTextureUrl = uploadOrKeep(BucketNames.TEXTURE_BUCKET, textureName, request.baseTexture, texture.baseTextureUrl, request.removeBaseTexture)
+        val bumpMapUrl = uploadOrKeep(BucketNames.BUMP_MAP_BUCKET, textureName, request.bumpMap, texture.bumpMapUrl, request.removeBumpMap)
+        val alphaMapUrl = uploadOrKeep(BucketNames.ALPHA_MAP_BUCKET, textureName, request.alphaMap, texture.alphaMapUrl, request.removeAlphaMap)
+        val normalMapUrl = uploadOrKeep(BucketNames.NORMAL_BUCKET, textureName, request.normalMap, texture.normalMapUrl, request.removeNormalMap)
+        val roughnessMapUrl = uploadOrKeep(BucketNames.ROUGHNESS_BUCKET, textureName, request.roughnessMap, texture.roughnessMapUrl, request.removeRoughnessMap)
+        val metalnessMapUrl = uploadOrKeep(BucketNames.METALNESS_BUCKET, textureName, request.metalnessMap, texture.metalnessMapUrl, request.removeMetalnessMap)
+        val aoMapUrl = uploadOrKeep(BucketNames.AO_BUCKET, textureName, request.aoMap, texture.aoMapUrl, request.removeAoMap)
+        val displacementMapUrl = uploadOrKeep(BucketNames.DISPLACEMENT_BUCKET, textureName, request.displacementMap, texture.displacementMapUrl, request.removeDisplacementMap)
+        val iconUrl = uploadOrKeep(BucketNames.ICON_BUCKET, textureName, request.icon.icon, texture.icon.url, false)
+
+        texture.apply {
+            this.baseTextureUrl = baseTextureUrl
+            this.bumpMapUrl = bumpMapUrl
+            this.alphaMapUrl = alphaMapUrl
+            this.normalMapUrl = normalMapUrl
+            this.roughnessMapUrl = roughnessMapUrl
+            this.metalnessMapUrl = metalnessMapUrl
+            this.aoMapUrl = aoMapUrl
+            this.displacementMapUrl = displacementMapUrl
+            this.icon.url = iconUrl ?: ""
+        }
+    }
+    private fun updateTextureFields(texture: Texture, newName: String, oldName: String) {
+        val newBaseTextureUrl = imageService.renameFile(BucketNames.TEXTURE_BUCKET, newName, oldName,texture.baseTextureUrl)
+        val newBumpMapUrl = imageService.renameFile(BucketNames.BUMP_MAP_BUCKET, newName, oldName, texture.bumpMapUrl)
+        val newAlphaMapUrl = imageService.renameFile(BucketNames.ALPHA_MAP_BUCKET, newName, oldName, texture.alphaMapUrl)
+        val newNormalMapUrl = imageService.renameFile(BucketNames.NORMAL_BUCKET, newName, oldName, texture.normalMapUrl)
+        val newMetalnessMapUrl = imageService.renameFile(BucketNames.METALNESS_BUCKET, newName, oldName, texture.metalnessMapUrl)
+        val newRoughnessMapUrl = imageService.renameFile(BucketNames.ROUGHNESS_BUCKET, newName, oldName, texture.roughnessMapUrl)
+        val newAoMapUrl = imageService.renameFile(BucketNames.AO_BUCKET, newName, oldName, texture.aoMapUrl)
+        val newDisplacementMapUrl = imageService.renameFile(BucketNames.DISPLACEMENT_BUCKET, newName, oldName, texture.displacementMapUrl)
+        val newIconUrl = imageService.renameFile(BucketNames.ICON_BUCKET, newName, oldName, texture.icon.url)
+
+        texture.apply {
+            this.name = newName
+            this.baseTextureUrl = newBaseTextureUrl
+            this.bumpMapUrl = newBumpMapUrl
+            this.alphaMapUrl = newAlphaMapUrl
+            this.normalMapUrl = newNormalMapUrl
+            this.metalnessMapUrl = newMetalnessMapUrl
+            this.roughnessMapUrl = newRoughnessMapUrl
+            this.aoMapUrl = newAoMapUrl
+            this.displacementMapUrl = newDisplacementMapUrl
+            this.icon.url = newIconUrl ?: ""
+        }
+    }
+
+    private fun uploadOrKeep(bucket: String, textureName: String, newFile: MultipartFile?, oldUrl: String?, needRemovement: Boolean) =
+        when {
+            newFile != null -> imageService.uploadImage(bucket, textureName, newFile)
+            needRemovement -> null
+            else -> oldUrl
+        }
 
     private fun getTextureIfExists(id: UUID): Texture {
         return textureRepository.findByIdOrNull(id)

@@ -1,6 +1,7 @@
 package com.dulfinne.configurator.mapper
 
 import com.dulfinne.configurator.dto.request.IconRequest
+import com.dulfinne.configurator.dto.request.UpdateIconRequest
 import com.dulfinne.configurator.dto.response.IconResponse
 import com.dulfinne.configurator.entity.Icon
 import com.dulfinne.configurator.entity.enums.IconType
@@ -19,8 +20,7 @@ fun IconRequest.toEntity(): Icon = Icon(
     type = type?.id ?: IconType.UNKNOWN.id,
 )
 
-fun Icon.updateFromRequest(request: IconRequest) {
+fun Icon.updateFromRequest(request: UpdateIconRequest) {
     this.name = request.name
-    this.url = ""
     this.type = request.type?.id ?: IconType.UNKNOWN.id
 }

@@ -5,6 +5,7 @@ import com.dulfinne.configurator.service.ImageService
 import com.dulfinne.configurator.util.BucketNames
 import com.dulfinne.configurator.util.MinioConstants
 import io.minio.BucketExistsArgs
+import io.minio.GetObjectArgs
 import io.minio.GetPresignedObjectUrlArgs
 import io.minio.MakeBucketArgs
 import io.minio.MinioClient
@@ -12,12 +13,11 @@ import io.minio.PutObjectArgs
 import io.minio.RemoveObjectArgs
 import io.minio.SetBucketPolicyArgs
 import io.minio.http.Method
+import org.apache.tika.Tika
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 
 @Service
-@Transactional
 class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioProperties) : ImageService {
 
     override fun uploadImage(bucketName: String, imageName: String, file: MultipartFile): String {
@@ -36,6 +36,31 @@ class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioP
                 .`object`(imageName)
                 .build()
         )
+    }
+
+    override fun renameFile(bucketName: String, newName: String, oldName: String, oldUrl: String?): String? {
+        if (oldUrl == null) {
+            return oldUrl
+        }
+        val oldObjectStream = minioClient.getObject(
+            GetObjectArgs.builder()
+                .bucket(bucketName)
+                .`object`(oldName)
+                .build()
+        )
+
+        val byteArray = oldObjectStream.readBytes()
+        minioClient.putObject(
+            PutObjectArgs.builder()
+                .stream(byteArray.inputStream(), byteArray.size.toLong(), -1)
+                .bucket(bucketName)
+                .`object`(newName)
+               .contentType(getFileType(byteArray))
+                .build()
+        )
+        deleteImage(bucketName, oldName)
+
+        return getPublicImageUrl(bucketName, newName)
     }
 
     override fun getPublicImageUrl(bucketName: String, imageName: String): String {
@@ -96,5 +121,10 @@ class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioP
                 .config(policyJson)
                 .build()
         )
+    }
+
+    fun getFileType(byteArray: ByteArray): String {
+        val tika = Tika()
+        return tika.detect(byteArray)
     }
 }

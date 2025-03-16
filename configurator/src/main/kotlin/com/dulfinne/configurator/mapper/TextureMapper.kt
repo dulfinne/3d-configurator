@@ -1,6 +1,7 @@
 package com.dulfinne.configurator.mapper
 
 import com.dulfinne.configurator.dto.request.TextureRequest
+import com.dulfinne.configurator.dto.request.UpdateTextureRequest
 import com.dulfinne.configurator.dto.response.TextureResponse
 import com.dulfinne.configurator.entity.Texture
 
@@ -24,7 +25,7 @@ fun TextureRequest.toEntity(): Texture = Texture(
     id = null,
     name = name,
     baseColor = baseColor,
-    baseTextureUrl = "",
+    baseTextureUrl = null,
     alphaMapUrl = null,
     bumpMapUrl = null,
     normalMapUrl = null,
@@ -36,17 +37,8 @@ fun TextureRequest.toEntity(): Texture = Texture(
     icon = icon.toEntity(),
 )
 
-fun Texture.updateFromRequest(updateRequest: TextureRequest) {
-    this.name = updateRequest.name
+fun Texture.updateFromRequest(updateRequest: UpdateTextureRequest) {
     this.baseColor = updateRequest.baseColor
-    this.baseTextureUrl = ""
-    this.alphaMapUrl = null
-    this.bumpMapUrl = null
-    this.normalMapUrl = null
-    this.metalnessMapUrl = null
-    this.roughnessMapUrl = null
-    this.aoMapUrl = null
-    this.displacementMapUrl = null
     this.properties.updateFromRequest(updateRequest.properties)
     this.icon.updateFromRequest(updateRequest.icon)
 }
