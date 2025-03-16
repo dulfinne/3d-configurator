@@ -23,7 +23,16 @@
         <swagger-core-v3.version>2.2.8</swagger-core-v3.version>
         <minio.version>8.5.17</minio.version>
         <shedlock.version>5.13.0</shedlock.version>
+        <spire-dock.version>5.3.2</spire-dock.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>com.e-iceblue</id>
+            <name>e-iceblue</name>
+            <url>https://repo.e-iceblue.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -124,6 +133,12 @@
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-provider-jdbc-template</artifactId>
             <version>${shedlock.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>e-iceblue</groupId>
+            <artifactId>spire.doc.free</artifactId>
+            <version>${spire-dock.version}</version>
         </dependency>
     </dependencies>
 
