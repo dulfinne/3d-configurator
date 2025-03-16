@@ -9,4 +9,10 @@ object ExceptionMessages {
     const val UNKNOWN_ERROR = "An unknown error has occurred..."
     const val DEFAULT_ENTITY_NOT_FOUND = "Entity not found"
     const val DEFAULT_ENTITY_EXISTS = "Entity already exists"
+
+    const val DESIGN_PROJECT_NOT_FOUND_ID = "Design project not found: id = %s"
+    const val DESIGN_PROJECT_EXISTS_NAME = "Design project already exists: name = %s"
+
+    const val PROJECT_TEMPLATE_NOT_FOUND_ID = "Project template not found: id = %s"
+    const val PROJECT_TEMPLATE_EXISTS_NAME = "Project template already exists: name = %s"
 }

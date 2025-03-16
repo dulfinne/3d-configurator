@@ -11,6 +11,8 @@ object BucketNames {
     const val DISPLACEMENT_BUCKET = "displacement-map"
     const val ICON_BUCKET = "icon"
 
+    const val PROJECT_PREVIEW_IMAGE_BUCKET = "project-preview-images"
+
     const val DOCUMENTS_BUCKET = "documents"
     const val POLICY_GENERATION_BUCKET = "bucket-name"
 }

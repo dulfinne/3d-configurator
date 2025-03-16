@@ -84,7 +84,6 @@ class TextureServiceImpl(
         val texture = getTextureIfExists(id)
         textureRepository.delete(texture)
         deleteAllImagesFromStorage(texture.name, texture.icon.name)
-
     }
 
     private fun deleteAllImagesFromStorage(textureName: String, iconName: String) {
@@ -122,7 +121,8 @@ class TextureServiceImpl(
     }
 
     private fun uploadImages(texture: Texture, request: TextureRequest, textureName: String, iconName: String) {
-        val baseTextureUrl = imageService.uploadImage(BucketNames.TEXTURE_BUCKET, textureName, request.baseTexture!!)
+        val baseTextureUrl =
+            request.baseTexture?.let { imageService.uploadImage(BucketNames.TEXTURE_BUCKET, textureName, it) }
         val bumpMapUrl = request.bumpMap?.let { imageService.uploadImage(BucketNames.BUMP_MAP_BUCKET, textureName, it) }
         val alphaMapUrl =
             request.alphaMap?.let { imageService.uploadImage(BucketNames.ALPHA_MAP_BUCKET, textureName, it) }
