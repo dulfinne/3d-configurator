@@ -3,7 +3,6 @@ package com.dulfinne.configurator.dto.request
 import com.dulfinne.configurator.util.ValidationMessages
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotNull
 import org.springframework.web.multipart.MultipartFile
 
 data class TextureRequest(
@@ -14,7 +13,6 @@ data class TextureRequest(
     @field:NotBlank(message = ValidationMessages.COLOR_REQUIRED)
     val baseColor: String,
 
-    @field:NotNull(message = ValidationMessages.FILE_REQUIRED)
     val baseTexture: MultipartFile?,
 
     val alphaMap: MultipartFile?,

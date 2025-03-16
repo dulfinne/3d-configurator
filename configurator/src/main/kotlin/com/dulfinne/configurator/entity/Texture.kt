@@ -19,14 +19,14 @@ class Texture(
     @Column(name = "id")
     var id: UUID?,
 
-    @Column(name = "name", unique = true,nullable = false)
+    @Column(name = "name", unique = true, nullable = false)
     var name: String,
 
     @Column(name = "base_color", nullable = false)
     var baseColor: String,
 
-    @Column(name = "base_texture_url", nullable = false)
-    var baseTextureUrl: String,
+    @Column(name = "base_texture_url")
+    var baseTextureUrl: String?,
 
     @Column(name = "alpha_map_url")
     var alphaMapUrl: String?,
@@ -50,7 +50,7 @@ class Texture(
     var displacementMapUrl: String?,
 
     @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "properties_id", referencedColumnName = "id",nullable = false)
+    @JoinColumn(name = "properties_id", referencedColumnName = "id", nullable = false)
     var properties: TextureProperties,
 
     @OneToOne(cascade = [CascadeType.ALL])
