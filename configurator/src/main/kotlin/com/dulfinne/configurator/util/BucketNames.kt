@@ -13,6 +13,7 @@ object BucketNames {
 
     const val PROJECT_PREVIEW_IMAGE_BUCKET = "project-preview-images"
 
+    const val MODELS_3D_BUCKET = "3d-models"
     const val DOCUMENTS_BUCKET = "documents"
     const val POLICY_GENERATION_BUCKET = "bucket-name"
 }

@@ -9,7 +9,8 @@ enum class IconType(val id: Int) {
     CEILING_MATERIAL(5),
     CONTROL_PANEL(6),
     HANDRAIL(7),
-    BUMPER(8);
+    BUMPER(8),
+    INDICATION_BOARD(9);
 
     companion object {
         fun fromId(id: Int): IconType {

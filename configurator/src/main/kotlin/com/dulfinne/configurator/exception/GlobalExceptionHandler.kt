@@ -28,6 +28,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<Map<String, String>> {
+       ex.printStackTrace()
         val errors = ex.bindingResult.fieldErrors.associate { fieldError ->
             fieldError.field to (fieldError.defaultMessage ?: ValidationMessages.DEFAULT_MESSAGE)
         }

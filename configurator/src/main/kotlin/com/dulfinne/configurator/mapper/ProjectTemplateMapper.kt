@@ -22,6 +22,5 @@ fun ProjectTemplateRequest.toEntity(): ProjectTemplate = ProjectTemplate(
 fun ProjectTemplate.updateFromRequest(request: ProjectTemplateRequest) {
     this.name = request.name
     this.configuration = request.configuration
-    this.previewImageUrl = ""
     this.designProject = null
 }

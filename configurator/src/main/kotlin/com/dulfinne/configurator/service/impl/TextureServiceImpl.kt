@@ -22,7 +22,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @Service
@@ -140,15 +139,15 @@ class TextureServiceImpl(
 
     private fun uploadImagesIfNeeded(texture: Texture, request: UpdateTextureRequest) {
         val textureName = texture.name
-        val baseTextureUrl = uploadOrKeep(BucketNames.TEXTURE_BUCKET, textureName, request.baseTexture, texture.baseTextureUrl, request.removeBaseTexture)
-        val bumpMapUrl = uploadOrKeep(BucketNames.BUMP_MAP_BUCKET, textureName, request.bumpMap, texture.bumpMapUrl, request.removeBumpMap)
-        val alphaMapUrl = uploadOrKeep(BucketNames.ALPHA_MAP_BUCKET, textureName, request.alphaMap, texture.alphaMapUrl, request.removeAlphaMap)
-        val normalMapUrl = uploadOrKeep(BucketNames.NORMAL_BUCKET, textureName, request.normalMap, texture.normalMapUrl, request.removeNormalMap)
-        val roughnessMapUrl = uploadOrKeep(BucketNames.ROUGHNESS_BUCKET, textureName, request.roughnessMap, texture.roughnessMapUrl, request.removeRoughnessMap)
-        val metalnessMapUrl = uploadOrKeep(BucketNames.METALNESS_BUCKET, textureName, request.metalnessMap, texture.metalnessMapUrl, request.removeMetalnessMap)
-        val aoMapUrl = uploadOrKeep(BucketNames.AO_BUCKET, textureName, request.aoMap, texture.aoMapUrl, request.removeAoMap)
-        val displacementMapUrl = uploadOrKeep(BucketNames.DISPLACEMENT_BUCKET, textureName, request.displacementMap, texture.displacementMapUrl, request.removeDisplacementMap)
-        val iconUrl = uploadOrKeep(BucketNames.ICON_BUCKET, textureName, request.icon.icon, texture.icon.url, false)
+        val baseTextureUrl = imageService.uploadOrKeep(BucketNames.TEXTURE_BUCKET, textureName, request.baseTexture, texture.baseTextureUrl, request.removeBaseTexture)
+        val bumpMapUrl = imageService.uploadOrKeep(BucketNames.BUMP_MAP_BUCKET, textureName, request.bumpMap, texture.bumpMapUrl, request.removeBumpMap)
+        val alphaMapUrl = imageService.uploadOrKeep(BucketNames.ALPHA_MAP_BUCKET, textureName, request.alphaMap, texture.alphaMapUrl, request.removeAlphaMap)
+        val normalMapUrl = imageService.uploadOrKeep(BucketNames.NORMAL_BUCKET, textureName, request.normalMap, texture.normalMapUrl, request.removeNormalMap)
+        val roughnessMapUrl = imageService.uploadOrKeep(BucketNames.ROUGHNESS_BUCKET, textureName, request.roughnessMap, texture.roughnessMapUrl, request.removeRoughnessMap)
+        val metalnessMapUrl = imageService.uploadOrKeep(BucketNames.METALNESS_BUCKET, textureName, request.metalnessMap, texture.metalnessMapUrl, request.removeMetalnessMap)
+        val aoMapUrl = imageService.uploadOrKeep(BucketNames.AO_BUCKET, textureName, request.aoMap, texture.aoMapUrl, request.removeAoMap)
+        val displacementMapUrl = imageService.uploadOrKeep(BucketNames.DISPLACEMENT_BUCKET, textureName, request.displacementMap, texture.displacementMapUrl, request.removeDisplacementMap)
+        val iconUrl = imageService.uploadOrKeep(BucketNames.ICON_BUCKET, textureName, request.icon.icon, texture.icon.url, false)
 
         texture.apply {
             this.baseTextureUrl = baseTextureUrl
@@ -187,12 +186,7 @@ class TextureServiceImpl(
         }
     }
 
-    private fun uploadOrKeep(bucket: String, textureName: String, newFile: MultipartFile?, oldUrl: String?, needRemovement: Boolean) =
-        when {
-            newFile != null -> imageService.uploadImage(bucket, textureName, newFile)
-            needRemovement -> null
-            else -> oldUrl
-        }
+
 
     private fun getTextureIfExists(id: UUID): Texture {
         return textureRepository.findByIdOrNull(id)

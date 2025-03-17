@@ -17,6 +17,11 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 900MB
+
 minio:
   bucket: texture
   publicUrl: http://localhost:9000

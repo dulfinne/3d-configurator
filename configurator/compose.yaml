@@ -5,7 +5,7 @@ services:
     image: postgres:17.0
     container_name: configurator_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: "db"
       POSTGRES_PASSWORD: "123"
@@ -38,6 +38,18 @@ services:
       - '9000:9000'
     volumes:
       - minio_data:/data
+
+  frontend:
+    image: evgeniysavickiy/configurator-frontend
+    container_name: configurator-frontend
+    ports:
+      - "3000:80"
+
+  frontend-admin:
+    image: evgeniysavickiy/configurator-admin:latest
+    container_name: configurator-admin
+    ports:
+      - "8088:80"
 
 volumes:
   postgres_data:

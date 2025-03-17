@@ -15,4 +15,6 @@ object ExceptionMessages {
 
     const val PROJECT_TEMPLATE_NOT_FOUND_ID = "Project template not found: id = %s"
     const val PROJECT_TEMPLATE_EXISTS_NAME = "Project template already exists: name = %s"
+
+    const val FILE_NAME_NOT_FOUND = "File name not found"
 }

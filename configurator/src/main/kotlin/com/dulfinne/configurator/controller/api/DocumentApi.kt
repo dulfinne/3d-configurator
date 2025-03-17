@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody
 @Tag(name = "Document Controller", description = "Generating documents")
 interface DocumentApi {
 
-
     @Operation(
         operationId = "generateElevatorDocument",
         summary = "Generate elevator document from configuration"

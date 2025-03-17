@@ -3,6 +3,7 @@ package com.dulfinne.configurator.service.impl
 import com.dulfinne.configurator.props.MinioProperties
 import com.dulfinne.configurator.service.ImageService
 import com.dulfinne.configurator.util.BucketNames
+import com.dulfinne.configurator.util.ExceptionMessages
 import com.dulfinne.configurator.util.MinioConstants
 import io.minio.BucketExistsArgs
 import io.minio.GetObjectArgs
@@ -13,6 +14,7 @@ import io.minio.PutObjectArgs
 import io.minio.RemoveObjectArgs
 import io.minio.SetBucketPolicyArgs
 import io.minio.http.Method
+import jakarta.persistence.EntityNotFoundException
 import org.apache.tika.Tika
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -28,6 +30,22 @@ class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioP
         saveImage(imageName, bucketName, file)
         return getPublicImageUrl(bucketName, imageName)
     }
+
+    override fun uploadImage(bucketName: String, file: MultipartFile): String {
+        val name = file.originalFilename ?: throw EntityNotFoundException(ExceptionMessages.FILE_NAME_NOT_FOUND)
+        if (!checkBucketExists(bucketName)) {
+            createBucket(bucketName)
+        }
+        saveImage(name, bucketName, file)
+        return getPublicImageUrl(bucketName, name)
+    }
+
+    override fun uploadOrKeep(bucket: String, textureName: String, newFile: MultipartFile?, oldUrl: String?, needRemovement: Boolean) =
+        when {
+            newFile != null -> uploadImage(bucket, textureName, newFile)
+            needRemovement -> null
+            else -> oldUrl
+        }
 
     override fun deleteImage(bucketName: String, imageName: String) {
         minioClient.removeObject(
@@ -55,7 +73,7 @@ class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioP
                 .stream(byteArray.inputStream(), byteArray.size.toLong(), -1)
                 .bucket(bucketName)
                 .`object`(newName)
-               .contentType(getFileType(byteArray))
+                .contentType(getFileType(byteArray))
                 .build()
         )
         deleteImage(bucketName, oldName)

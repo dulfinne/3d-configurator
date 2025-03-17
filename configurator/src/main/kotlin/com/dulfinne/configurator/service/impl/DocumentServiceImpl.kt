@@ -1,7 +1,8 @@
 package com.dulfinne.configurator.service.impl
 
 import com.dulfinne.configurator.dto.request.ElevatorRequest
-import com.dulfinne.configurator.service.DocumetService
+import com.dulfinne.configurator.service.DocumentService
+import com.dulfinne.configurator.service.ImageService
 import com.dulfinne.configurator.service.ReplacementService
 import com.dulfinne.configurator.util.BucketNames
 import com.dulfinne.configurator.util.DocumentConstants
@@ -17,7 +18,11 @@ import java.io.InputStream
 
 
 @Service
-class DocumentServiceImpl(val minioClient: MinioClient, val replacementService: ReplacementService) : DocumetService {
+class DocumentServiceImpl(
+    val minioClient: MinioClient,
+    val replacementService: ReplacementService,
+    val imageService: ImageService
+) : DocumentService {
     override fun generateElevatorConfigurationDocument(request: ElevatorRequest): ByteArray {
         return generateFromTemplate(request)
     }
@@ -42,9 +47,10 @@ class DocumentServiceImpl(val minioClient: MinioClient, val replacementService: 
         replacementService.replaceFloorTextInDocument(document, request.floor)
         replacementService.replaceControlPanelTextInDocument(document, request.controlPanel)
 
+        setWatermark(document)
 
         val byteArrayOutputStream = ByteArrayOutputStream()
-        document.saveToStream(byteArrayOutputStream, FileFormat.Docx)
+        document.saveToStream(byteArrayOutputStream, FileFormat.PDF)
 
         return byteArrayOutputStream.toByteArray()
     }
@@ -68,9 +74,9 @@ class DocumentServiceImpl(val minioClient: MinioClient, val replacementService: 
 
     private fun setWatermark(document: Document) {
         val textWatermark = TextWatermark()
-        textWatermark.text = "CONFIDENTIAL"
+        textWatermark.text = "ANKA_PETROVA"
         textWatermark.fontSize = 72f
-        textWatermark.color = Color.RED
+        textWatermark.color = Color.PINK
         document.watermark = textWatermark
     }
 }
