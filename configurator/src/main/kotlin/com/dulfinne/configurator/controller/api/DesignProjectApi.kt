@@ -69,7 +69,7 @@ interface DesignProjectApi {
             )]
         )
     )
-    @GetMapping("/design-project/{designProjectId}")
+    @GetMapping("/{projectId}/templates")
     fun getAllProjectTemplates(
         @Parameter(`in` = ParameterIn.PATH)
         @PathVariable designProjectId: UUID,

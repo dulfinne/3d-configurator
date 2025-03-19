@@ -39,13 +39,13 @@ class DesignProjectController(
         return projects
     }
 
-    @GetMapping("/templates/{designProjectId}")
+    @GetMapping("/{projectId}/templates")
     override fun getAllProjectTemplates(
-        @PathVariable designProjectId: UUID,
+        @PathVariable projectId: UUID,
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "6") size: Int
     ): PaginatedResponse<ProjectTemplateResponse> {
-        val projects = projectTemplateService.getAllTemplatesByDesignProjectId(designProjectId, page, size)
+        val projects = projectTemplateService.getAllTemplatesByDesignProjectId(projectId, page, size)
         return projects
     }
 

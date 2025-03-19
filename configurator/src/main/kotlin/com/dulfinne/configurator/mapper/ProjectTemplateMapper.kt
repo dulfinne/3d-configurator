@@ -1,6 +1,7 @@
 package com.dulfinne.configurator.mapper
 
 import com.dulfinne.configurator.dto.request.ProjectTemplateRequest
+import com.dulfinne.configurator.dto.request.UpdateProjectTemplateRequest
 import com.dulfinne.configurator.dto.response.ProjectTemplateResponse
 import com.dulfinne.configurator.entity.ProjectTemplate
 
@@ -19,8 +20,7 @@ fun ProjectTemplateRequest.toEntity(): ProjectTemplate = ProjectTemplate(
     previewImageUrl = ""
 )
 
-fun ProjectTemplate.updateFromRequest(request: ProjectTemplateRequest) {
+fun ProjectTemplate.updateFromRequest(request: UpdateProjectTemplateRequest) {
     this.name = request.name
     this.configuration = request.configuration
-    this.designProject = null
 }

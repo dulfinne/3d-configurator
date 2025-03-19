@@ -1,6 +1,7 @@
 package com.dulfinne.configurator.controller.api
 
 import com.dulfinne.configurator.dto.request.ProjectTemplateRequest
+import com.dulfinne.configurator.dto.request.UpdateProjectTemplateRequest
 import com.dulfinne.configurator.dto.response.ProjectTemplateResponse
 import com.dulfinne.configurator.exception.ErrorResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -135,7 +136,7 @@ interface ProjectTemplateApi {
     fun updateProjectTemplate(
         @Parameter(`in` = ParameterIn.PATH)
         @PathVariable templateId: UUID,
-        @RequestBody @Valid request: ProjectTemplateRequest
+        @RequestBody @Valid request: UpdateProjectTemplateRequest
     ): ProjectTemplateResponse
 
     @Operation(
