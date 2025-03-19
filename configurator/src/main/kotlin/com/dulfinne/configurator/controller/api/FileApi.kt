@@ -2,11 +2,9 @@ package com.dulfinne.configurator.controller.api
 
 import com.dulfinne.configurator.dto.request.FileRequest
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -22,7 +20,6 @@ interface FileApi {
         ApiResponse(
             description = "Successfully uploaded 3d-model",
             responseCode = "201",
-            content = [Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)]
         )
     )
     @PostMapping("/3d-model")
@@ -36,7 +33,6 @@ interface FileApi {
         ApiResponse(
             description = "Successfully uploaded document template",
             responseCode = "200",
-            content = [Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)]
         )
     )
     @PostMapping("/template")

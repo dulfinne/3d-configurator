@@ -1,17 +1,34 @@
 name: 3d-configurator
 
 services:
-  configurator_db:
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: db
+      KC_DB_PASSWORD: 123
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    command: [ "start-dev", "--import-realm" ]
+    volumes:
+      - ./keycloak/:/opt/keycloak/data/import/
+
+  postgres:
     image: postgres:17.0
-    container_name: configurator_db
+    container_name: postgres
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_USER: "db"
-      POSTGRES_PASSWORD: "123"
-      POSTGRES_DB: "configurator_db"
+      POSTGRES_USER: db
+      POSTGRES_PASSWORD: 123
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init-database:/docker-entrypoint-initdb.d
 
   configurator-service:
     container_name: configurator-service
@@ -19,12 +36,13 @@ services:
     ports:
       - "8090:8090"
     environment:
-      PG_URL: jdbc:postgresql://configurator_db:5432
+      PG_URL: jdbc:postgresql://postgres:5432
       PG_USERNAME: "db"
       PG_PASSWORD: "123"
       MINIO_URL: http://minio:9000
+      KEYCLOAK_SERVER_URL: http://keycloak:8080
     depends_on:
-      - configurator_db
+      - postgres
 
   minio:
     image: minio/minio:latest

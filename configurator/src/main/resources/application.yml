@@ -33,6 +33,13 @@ scheduler:
   link-updating:
     cron: 0 0 0 * * 0
 
+keycloak:
+  client:
+    id: springsecurity
+    secret: ${KEYCLOAK_CLIENT_SECRET:egD63JWeQQLVP7OY8P2qAPR5eIwvR5Zp}
+  realm: configurator
+  server-url: http://localhost:8080
+
 springdoc:
   api-docs:
     path: /docs/v3/api-docs
