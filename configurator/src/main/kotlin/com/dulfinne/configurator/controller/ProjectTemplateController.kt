@@ -2,6 +2,7 @@ package com.dulfinne.configurator.controller
 
 import com.dulfinne.configurator.controller.api.ProjectTemplateApi
 import com.dulfinne.configurator.dto.request.ProjectTemplateRequest
+import com.dulfinne.configurator.dto.request.UpdateProjectTemplateRequest
 import com.dulfinne.configurator.dto.response.ProjectTemplateResponse
 import com.dulfinne.configurator.service.ProjectTemplateService
 import jakarta.validation.Valid
@@ -38,7 +39,7 @@ class ProjectTemplateController(val projectTemplateService: ProjectTemplateServi
     @PutMapping("/{templateId}")
     override fun updateProjectTemplate(
         @PathVariable templateId: UUID,
-        @ModelAttribute @Valid request: ProjectTemplateRequest
+        @ModelAttribute @Valid request: UpdateProjectTemplateRequest
     ): ProjectTemplateResponse {
         val template = projectTemplateService.updateProjectTemplate(templateId, request)
         return template

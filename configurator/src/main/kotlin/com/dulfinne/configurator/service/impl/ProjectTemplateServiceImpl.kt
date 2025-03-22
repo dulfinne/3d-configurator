@@ -1,6 +1,7 @@
 package com.dulfinne.configurator.service.impl
 
 import com.dulfinne.configurator.dto.request.ProjectTemplateRequest
+import com.dulfinne.configurator.dto.request.UpdateProjectTemplateRequest
 import com.dulfinne.configurator.dto.response.PaginatedResponse
 import com.dulfinne.configurator.dto.response.ProjectTemplateResponse
 import com.dulfinne.configurator.entity.DesignProject
@@ -21,6 +22,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @Service
@@ -55,35 +57,30 @@ class ProjectTemplateServiceImpl(
         val designProject = getDesignProjectIfExists(request.designProjectId ?: UUID.randomUUID())
         projectTemplate.designProject = designProject
 
-        uploadPreviewImage(projectTemplate, request)
+        uploadPreviewImageIfPresent(projectTemplate, request.previewImage)
 
         projectTemplateRepository.save(projectTemplate)
         return projectTemplate.toResponse()
     }
 
     @Transactional
-    override fun updateProjectTemplate(id: UUID, request: ProjectTemplateRequest): ProjectTemplateResponse {
+    override fun updateProjectTemplate(id: UUID, request: UpdateProjectTemplateRequest): ProjectTemplateResponse {
         val projectTemplate = getProjectTemplateIfExists(id)
+
         val oldName = projectTemplate.name
-        checkNameUniqueness(request.name, oldName)
+        val newName = request.name
+        val nameChanged = oldName != newName
+        if (nameChanged) {
+            handleNameChange(projectTemplate, request.name)
+        }
 
         projectTemplate.updateFromRequest(request)
-        deleteOldImagesIfNeeded(oldName, request.name)
+        uploadPreviewImageIfPresent(projectTemplate, request.previewImage)
 
-        val designProject = getDesignProjectIfExists(request.designProjectId ?: UUID.randomUUID())
-        projectTemplate.designProject = designProject
-
-        uploadPreviewImage(projectTemplate, request)
+        request.designProjectId?.let { projectTemplate.designProject = getDesignProjectIfExists(it) }
 
         projectTemplateRepository.save(projectTemplate)
         return projectTemplate.toResponse()
-    }
-
-    private fun uploadPreviewImage(projectTemplate: ProjectTemplate, request: ProjectTemplateRequest) {
-        val previewImageUrl = imageService.uploadImage(
-            BucketNames.PROJECT_PREVIEW_IMAGE_BUCKET, projectTemplate.name, request.previewImage!!
-        )
-        projectTemplate.previewImageUrl = previewImageUrl
     }
 
     @Transactional
@@ -93,13 +90,19 @@ class ProjectTemplateServiceImpl(
         imageService.deleteImage(BucketNames.PROJECT_PREVIEW_IMAGE_BUCKET, projectTemplate.name)
     }
 
-    private fun deleteOldImagesIfNeeded(
-        currentName: String,
-        newName: String,
-    ) {
-        val nameChanged = currentName != newName
-        if (nameChanged) {
-            imageService.deleteImage(BucketNames.PROJECT_PREVIEW_IMAGE_BUCKET, currentName)
+    private fun handleNameChange(projectTemplate: ProjectTemplate, newName: String) {
+        checkNameUniqueness(newName)
+        val url = imageService.renameFile(
+            BucketNames.PROJECT_PREVIEW_IMAGE_BUCKET, newName, projectTemplate.name, projectTemplate.previewImageUrl
+        )
+        url?.let { projectTemplate.previewImageUrl = it }
+    }
+
+    private fun uploadPreviewImageIfPresent(projectTemplate: ProjectTemplate, image: MultipartFile?) {
+        image?.let {
+            projectTemplate.previewImageUrl = imageService.uploadImage(
+                BucketNames.PROJECT_PREVIEW_IMAGE_BUCKET, projectTemplate.name, it
+            )
         }
     }
 
@@ -117,12 +120,6 @@ class ProjectTemplateServiceImpl(
     private fun checkNameUniqueness(name: String) {
         projectTemplateRepository.findByName(name)?.let {
             throw EntityExistsException(ExceptionMessages.PROJECT_TEMPLATE_EXISTS_NAME.format(name))
-        }
-    }
-
-    private fun checkNameUniqueness(newName: String, currentName: String) {
-        if (!newName.equals(currentName, ignoreCase = true)) {
-            checkNameUniqueness(newName)
         }
     }
 }
