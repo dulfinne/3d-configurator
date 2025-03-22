@@ -13,6 +13,7 @@ import com.spire.doc.Document
 
 interface ReplacementService {
 
+    fun replaceDateTextInDocument(document: Document)
     fun replaceCabinTextInDocument(document: Document, cabin: CabinRequest)
     fun replaceWallTextInDocument(document: Document, wall: WallRequest)
     fun replaceHandrailTextInDocument(document: Document, handrail: HandrailRequest)

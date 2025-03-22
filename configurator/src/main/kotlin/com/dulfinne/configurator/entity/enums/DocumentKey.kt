@@ -1,6 +1,8 @@
 package com.dulfinne.configurator.entity.enums
 
 enum class DocumentKey {
+    ANNA_DATE,
+
     CABIN_SIZE,
     CABIN_TYPE,
     CABIN_OPENING_TYPE,
@@ -20,16 +22,14 @@ enum class DocumentKey {
     MIRROR_LOCATION,
     DOORS_MATERIAL,
 
-    BUMPERS_RIGHT_MATERIAL,
-    BUMPERS_LEFT_MATERIAL,
-    BUMPERS_BACK_MATERIAL,
+    BUMPERS_MATERIAL,
 
     CEILING_LAMP,
     CEILING_MATERIAL,
-    CEILING_ORIENTATION,
 
     FLOOR_MATERIAL,
 
+    CONTROL_PANEL_TYPE,
     CONTROL_PANEL_NAME,
     CONTROL_PANEL_SIDE,
     CONTROL_PANEL_LOCATION,

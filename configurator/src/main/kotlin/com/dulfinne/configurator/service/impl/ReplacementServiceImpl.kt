@@ -16,10 +16,19 @@ import com.dulfinne.configurator.service.TextureService
 import com.dulfinne.configurator.util.LocationConstants
 import com.spire.doc.Document
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @Service
 class ReplacementServiceImpl(val textureService: TextureService) : ReplacementService {
+    override fun replaceDateTextInDocument(document: Document) {
+        val currentDate = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        val formattedDate = currentDate.format(formatter)
+
+        document.replace("{${DocumentKey.ANNA_DATE}}", formattedDate, false, false)
+    }
 
     override fun replaceCabinTextInDocument(document: Document, cabin: CabinRequest) {
         document.replace("{${DocumentKey.CABIN_SIZE}}", ReplacementOption.toDisplayName(cabin.size), false, false)
@@ -73,17 +82,12 @@ class ReplacementServiceImpl(val textureService: TextureService) : ReplacementSe
     }
 
     override fun replaceBumpersTextInDocument(document: Document, bumpers: BumpersRequest) {
-        document.replace("{${DocumentKey.BUMPERS_RIGHT_MATERIAL}}", getTextureNameByID(bumpers.right), false, false)
-        document.replace("{${DocumentKey.BUMPERS_LEFT_MATERIAL}}", getTextureNameByID(bumpers.left), false, false)
-        document.replace("{${DocumentKey.BUMPERS_BACK_MATERIAL}}", getTextureNameByID(bumpers.right), false, false)
+        document.replace("{${DocumentKey.BUMPERS_MATERIAL}}", getTextureNameByID(bumpers.texture), false, false)
     }
 
     override fun replaceCeilingTextInDocument(document: Document, ceiling: CeilingRequest) {
         document.replace("{${DocumentKey.CEILING_LAMP}}", getTextureNameByID(ceiling.lamp), false, false)
         document.replace("{${DocumentKey.CEILING_MATERIAL}}", getTextureNameByID(ceiling.texture), false, false)
-        document.replace(
-            "{${DocumentKey.CEILING_ORIENTATION}}", ReplacementOption.toDisplayName(ceiling.orientation), false, false
-        )
     }
 
     override fun replaceFloorTextInDocument(document: Document, floor: FloorRequest) {
@@ -91,6 +95,9 @@ class ReplacementServiceImpl(val textureService: TextureService) : ReplacementSe
     }
 
     override fun replaceControlPanelTextInDocument(document: Document, controlPanel: ControlPanelRequest) {
+        document.replace(
+            "{${DocumentKey.CONTROL_PANEL_TYPE}}", ReplacementOption.toDisplayName(controlPanel.type), false, false
+        )
         document.replace(
             "{${DocumentKey.CONTROL_PANEL_NAME}}", getTextureNameByID(controlPanel.indicationBoard), false, false
         )

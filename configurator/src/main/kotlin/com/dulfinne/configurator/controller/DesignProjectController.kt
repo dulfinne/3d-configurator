@@ -39,7 +39,7 @@ class DesignProjectController(
         return projects
     }
 
-    @GetMapping("/templates/{designProjectId}")
+    @GetMapping("/{designProjectId}/templates")
     override fun getAllProjectTemplates(
         @PathVariable designProjectId: UUID,
         @RequestParam(value = "page", defaultValue = "0") page: Int,

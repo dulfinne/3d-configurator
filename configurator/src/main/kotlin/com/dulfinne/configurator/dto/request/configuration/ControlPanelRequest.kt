@@ -7,4 +7,5 @@ data class ControlPanelRequest(
     val texture: UUID,
     val side: String,
     val location: String,
+    val type: String,
 )

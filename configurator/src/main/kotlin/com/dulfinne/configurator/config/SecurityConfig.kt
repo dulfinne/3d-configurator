@@ -33,6 +33,8 @@ class SecurityConfig(val keycloakProperties: KeycloakProperties) {
                         "/api/v1/textures/**"
                     )
                     .permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS)
+                    .permitAll()
                     .anyRequest()
                     .authenticated()
             }
