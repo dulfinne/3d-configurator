@@ -37,6 +37,7 @@ class DocumentServiceImpl(
 
         val document = Document(inputStream)
 
+        replacementService.replaceDateTextInDocument(document)
         replacementService.replaceCabinTextInDocument(document, request.cabin)
         replacementService.replaceWallTextInDocument(document, request.wall)
         replacementService.replaceHandrailTextInDocument(document, request.handrail)

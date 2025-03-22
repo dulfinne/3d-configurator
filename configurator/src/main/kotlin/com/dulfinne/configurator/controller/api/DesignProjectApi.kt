@@ -72,7 +72,7 @@ interface DesignProjectApi {
     @GetMapping("/{projectId}/templates")
     fun getAllProjectTemplates(
         @Parameter(`in` = ParameterIn.PATH)
-        @PathVariable designProjectId: UUID,
+        @PathVariable projectId: UUID,
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "6") size: Int
     ): PaginatedResponse<ProjectTemplateResponse>
