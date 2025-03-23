@@ -5,13 +5,8 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.0
     container_name: keycloak
-    environment:
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
-      KC_DB_USERNAME: db
-      KC_DB_PASSWORD: 123
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    env_file:
+      - ./env/keycloak.env
     ports:
       - "8080:8080"
     command: [ "start-dev", "--import-realm" ]
@@ -23,9 +18,8 @@ services:
     container_name: postgres
     ports:
       - "5433:5432"
-    environment:
-      POSTGRES_USER: db
-      POSTGRES_PASSWORD: 123
+    env_file:
+      - ./env/postgres.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-database:/docker-entrypoint-initdb.d
@@ -35,21 +29,16 @@ services:
     image: dulfinne/configurator-service:latest
     ports:
       - "8090:8090"
-    environment:
-      PG_URL: jdbc:postgresql://postgres:5432
-      PG_USERNAME: "db"
-      PG_PASSWORD: "123"
-      MINIO_URL: http://minio:9000
-      KEYCLOAK_SERVER_URL: http://keycloak:8080
+    env_file:
+      - ./env/configurator-service.env
     depends_on:
       - postgres
 
   minio:
     image: minio/minio:latest
     container_name: minio
-    environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=password
+    env_file:
+      - ./env/minio.env
     command: server /data --console-address :9090
     ports:
       - '9090:9090'

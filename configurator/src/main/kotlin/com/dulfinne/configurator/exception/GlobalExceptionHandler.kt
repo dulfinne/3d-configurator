@@ -4,12 +4,14 @@ import com.dulfinne.configurator.util.ExceptionMessages
 import com.dulfinne.configurator.util.ValidationMessages
 import jakarta.persistence.EntityExistsException
 import jakarta.persistence.EntityNotFoundException
+import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.server.ResponseStatusException
+
 
 @ControllerAdvice
 class GlobalExceptionHandler {
@@ -40,6 +42,15 @@ class GlobalExceptionHandler {
        ex.printStackTrace()
         val errors = ex.bindingResult.fieldErrors.associate { fieldError ->
             fieldError.field to (fieldError.defaultMessage ?: ValidationMessages.DEFAULT_MESSAGE)
+        }
+        return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolationException(ex: ConstraintViolationException): ResponseEntity<Map<String, String>> {
+        ex.printStackTrace()
+        val errors = ex.constraintViolations.associate { violation ->
+            violation.propertyPath.toString() to (violation.message ?: ValidationMessages.DEFAULT_MESSAGE)
         }
         return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
     }

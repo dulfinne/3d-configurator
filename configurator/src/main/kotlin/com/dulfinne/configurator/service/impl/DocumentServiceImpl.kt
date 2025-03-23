@@ -2,7 +2,6 @@ package com.dulfinne.configurator.service.impl
 
 import com.dulfinne.configurator.dto.request.ElevatorRequest
 import com.dulfinne.configurator.service.DocumentService
-import com.dulfinne.configurator.service.ImageService
 import com.dulfinne.configurator.service.ReplacementService
 import com.dulfinne.configurator.util.BucketNames
 import com.dulfinne.configurator.util.DocumentConstants
@@ -12,18 +11,16 @@ import com.spire.doc.TextWatermark
 import io.minio.GetObjectArgs
 import io.minio.MinioClient
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.awt.Color
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
-
 
 @Service
 class DocumentServiceImpl(
     val minioClient: MinioClient,
     val replacementService: ReplacementService,
-    val imageService: ImageService
 ) : DocumentService {
-    override fun generateElevatorConfigurationDocument(request: ElevatorRequest): ByteArray {
+    override fun generateElevatorDocument(request: ElevatorRequest): ByteArray {
         return generateFromTemplate(request)
     }
 
@@ -56,19 +53,12 @@ class DocumentServiceImpl(
         return byteArrayOutputStream.toByteArray()
     }
 
-    private fun addElevatorImage(document: Document) {
-        val image: InputStream = minioClient.getObject(
-            GetObjectArgs.builder()
-                .bucket(BucketNames.DOCUMENTS_BUCKET)
-                .`object`(DocumentConstants.TEMPLATE_ELEVATOR_PICTURE_NAME)
-                .build()
-        )
-
+    private fun addElevatorImage(document: Document, image: MultipartFile) {
         val paragraph = document.addSection().addParagraph()
         val text = paragraph.appendText(DocumentConstants.TEMPLATE_PICTURE_DESCRIPTION)
         text.characterFormat.textColor = Color.WHITE
 
-        val picture = paragraph.appendPicture(image)
+        val picture = paragraph.appendPicture(image.inputStream)
         picture.width = 300f
         picture.height = 400f
     }

@@ -17,17 +17,29 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
+  mail:
+    username: ${MAIL_APP_NAME:me@gmail.com}
+    password: ${MAIL_APP_PASSWORD}
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smth:
+          auth: true
+        smtp:
+          starttls:
+            enable: true
+
   servlet:
     multipart:
       max-file-size: 200MB
       max-request-size: 900MB
 
 minio:
-  bucket: texture
   publicUrl: http://localhost:9000
   url: http://localhost:9000
-  accessKey: admin
-  secretKey: password
+  accessKey: ${MINIO_ACCESS}
+  secretKey: ${MINIO_SECRET}
 
 scheduler:
   link-updating:
@@ -35,8 +47,8 @@ scheduler:
 
 keycloak:
   client:
-    id: springsecurity
-    secret: ${KEYCLOAK_CLIENT_SECRET:egD63JWeQQLVP7OY8P2qAPR5eIwvR5Zp}
+    id: ${KEYCLOAK_CLIENT_NAME}
+    secret: ${KEYCLOAK_CLIENT_SECRET}
   realm: configurator
   server-url: http://localhost:8080
 

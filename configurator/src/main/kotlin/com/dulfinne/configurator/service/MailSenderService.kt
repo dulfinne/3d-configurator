@@ -2,6 +2,6 @@ package com.dulfinne.configurator.service
 
 import com.dulfinne.configurator.dto.request.ElevatorRequest
 
-interface DocumentService {
-    fun generateElevatorDocument(request: ElevatorRequest): ByteArray
+interface MailSenderService {
+    fun sendElevatorDocument(to: String, request: ElevatorRequest)
 }
