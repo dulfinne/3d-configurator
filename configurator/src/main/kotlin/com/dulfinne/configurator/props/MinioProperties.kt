@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "minio")
 class MinioProperties {
-    lateinit var bucket: String
     lateinit var url: String
     lateinit var publicUrl: String
     lateinit var accessKey: String

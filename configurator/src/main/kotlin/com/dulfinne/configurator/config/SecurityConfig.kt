@@ -22,7 +22,7 @@ class SecurityConfig(val keycloakProperties: KeycloakProperties) {
                     .permitAll()
                     .requestMatchers(
                         "/api/v1/auth/login",
-                        "/api/v1/documents/configurations/elevator",
+                        "/api/v1/elevators/documents/**",
                     )
                     .permitAll()
                     .requestMatchers(
