@@ -31,50 +31,56 @@ class ReplacementServiceImpl(val textureService: TextureService) : ReplacementSe
     }
 
     override fun replaceCabinTextInDocument(document: Document, cabin: CabinRequest) {
-        document.replace("{${DocumentKey.CABIN_SIZE}}", ReplacementOption.toDisplayName(cabin.size), false, false)
-        document.replace("{${DocumentKey.CABIN_TYPE}}", ReplacementOption.toDisplayName(cabin.type), false, false)
-        document.replace(
-            "{${DocumentKey.CABIN_OPENING_TYPE}}",
-            ReplacementOption.toDisplayName(cabin.openingType),
-            false,
-            false
-        )
+        mapOf(
+            DocumentKey.CABIN_SIZE to cabin.size,
+            DocumentKey.CABIN_TYPE to cabin.type,
+            DocumentKey.CABIN_OPENING_TYPE to cabin.openingType
+        ).forEach { (key, value) ->
+            document.replace("{$key}", ReplacementOption.toDisplayName(value), false, false)
+        }
     }
 
     override fun replaceWallTextInDocument(document: Document, wall: WallRequest) {
-        document.replace("{${DocumentKey.WALL_BACK_MATERIAL}}", getTextureNameByID(wall.back), false, false)
-        document.replace("{${DocumentKey.WALL_FRONT_MATERIAL}}", getTextureNameByID(wall.front), false, false)
-        document.replace("{${DocumentKey.WALL_LEFT_MATERIAL}}", getTextureNameByID(wall.left), false, false)
-        document.replace("{${DocumentKey.WALL_RIGHT_MATERIAL}}", getTextureNameByID(wall.right), false, false)
+        mapOf(
+            DocumentKey.WALL_BACK_MATERIAL to wall.back,
+            DocumentKey.WALL_FRONT_MATERIAL to wall.front,
+            DocumentKey.WALL_LEFT_MATERIAL to wall.left,
+            DocumentKey.WALL_RIGHT_MATERIAL to wall.right
+        ).forEach { (key, textureId) ->
+            document.replace("{$key}", getTextureNameByID(textureId), false, false)
+        }
     }
 
     override fun replaceHandrailTextInDocument(document: Document, handrail: HandrailRequest) {
-        document.replace(
-            "{${DocumentKey.HANDRAIL_EXISTENCE}}", ReplacementOption.toDisplayName(handrail.existence), false, false
-        )
-        document.replace("{${DocumentKey.HANDRAIL_MATERIAL}}", getTextureNameByID(handrail.texture), false, false)
-        document.replace(
-            "{${DocumentKey.HANDRAIL_TYPE}}", ReplacementOption.toDisplayName(handrail.type), false, false
-        )
-        document.replace(
-            "{${DocumentKey.HANDRAIL_LOCATION}}",
-            getLocationText(handrail.left, handrail.right, handrail.back),
-            false,
-            false
-        )
+        val exists = handrail.existence == ReplacementOption.HAVE_HAND.key
+
+        val material = if (exists) getTextureNameByID(handrail.texture) else ""
+        val type = if (exists) ReplacementOption.toDisplayName(handrail.type) else ""
+        val location = if (exists) getLocationText(handrail.left, handrail.right, handrail.back) else ""
+
+        mapOf(
+            DocumentKey.HANDRAIL_EXISTENCE to ReplacementOption.toDisplayName(handrail.existence),
+            DocumentKey.HANDRAIL_MATERIAL to material,
+            DocumentKey.HANDRAIL_TYPE to type,
+            DocumentKey.HANDRAIL_LOCATION to location
+        ).forEach { (key, value) ->
+            document.replace("{$key}", value, false, false)
+        }
     }
 
     override fun replaceMirrorTextInDocument(document: Document, mirror: MirrorRequest) {
-        document.replace(
-            "{${DocumentKey.MIRROR_EXISTENCE}}", ReplacementOption.toDisplayName(mirror.existence), false, false
-        )
-        document.replace("{${DocumentKey.MIRROR_TYPE}}", ReplacementOption.toDisplayName(mirror.type), false, false)
-        document.replace(
-            "{${DocumentKey.MIRROR_LOCATION}}",
-            getLocationText(mirror.left, mirror.right, mirror.back),
-            false,
-            false
-        )
+        val exists = mirror.existence == ReplacementOption.HAVE_MIRROR.key
+
+        val type = if (exists) ReplacementOption.toDisplayName(mirror.type) else ""
+        val location = if (exists) getLocationText(mirror.left, mirror.right, mirror.back) else ""
+
+        mapOf(
+            DocumentKey.MIRROR_EXISTENCE to ReplacementOption.toDisplayName(mirror.existence),
+            DocumentKey.MIRROR_TYPE to type,
+            DocumentKey.MIRROR_LOCATION to location
+        ).forEach { (key, value) ->
+            document.replace("{$key}", value, false, false)
+        }
     }
 
     override fun replaceDoorsTextInDocument(document: Document, doors: DoorsRequest) {
@@ -86,8 +92,12 @@ class ReplacementServiceImpl(val textureService: TextureService) : ReplacementSe
     }
 
     override fun replaceCeilingTextInDocument(document: Document, ceiling: CeilingRequest) {
-        document.replace("{${DocumentKey.CEILING_LAMP}}", getTextureNameByID(ceiling.lamp), false, false)
-        document.replace("{${DocumentKey.CEILING_MATERIAL}}", getTextureNameByID(ceiling.texture), false, false)
+        mapOf(
+            DocumentKey.CEILING_LAMP to getTextureNameByID(ceiling.lamp),
+            DocumentKey.CEILING_MATERIAL to getTextureNameByID(ceiling.texture)
+        ).forEach { (key, value) ->
+            document.replace("{$key}", value, false, false)
+        }
     }
 
     override fun replaceFloorTextInDocument(document: Document, floor: FloorRequest) {
@@ -95,24 +105,15 @@ class ReplacementServiceImpl(val textureService: TextureService) : ReplacementSe
     }
 
     override fun replaceControlPanelTextInDocument(document: Document, controlPanel: ControlPanelRequest) {
-        document.replace(
-            "{${DocumentKey.CONTROL_PANEL_TYPE}}", ReplacementOption.toDisplayName(controlPanel.type), false, false
-        )
-        document.replace(
-            "{${DocumentKey.CONTROL_PANEL_NAME}}", getTextureNameByID(controlPanel.indicationBoard), false, false
-        )
-        document.replace(
-            "{${DocumentKey.CONTROL_PANEL_SIDE}}", ReplacementOption.toDisplayName(controlPanel.side), false, false
-        )
-        document.replace(
-            "{${DocumentKey.CONTROL_PANEL_LOCATION}}",
-            ReplacementOption.toDisplayName(controlPanel.location),
-            false,
-            false
-        )
-        document.replace(
-            "{${DocumentKey.CONTROL_PANEL_MATERIAL}}", getTextureNameByID(controlPanel.texture), false, false
-        )
+        mapOf(
+            DocumentKey.CONTROL_PANEL_TYPE to ReplacementOption.toDisplayName(controlPanel.type),
+            DocumentKey.CONTROL_PANEL_NAME to getTextureNameByID(controlPanel.indicationBoard),
+            DocumentKey.CONTROL_PANEL_SIDE to ReplacementOption.toDisplayName(controlPanel.side),
+            DocumentKey.CONTROL_PANEL_LOCATION to ReplacementOption.toDisplayName(controlPanel.location),
+            DocumentKey.CONTROL_PANEL_MATERIAL to getTextureNameByID(controlPanel.texture)
+        ).forEach { (key, value) ->
+            document.replace("{$key}", value, false, false)
+        }
     }
 
     private fun getTextureNameByID(id: UUID): String {

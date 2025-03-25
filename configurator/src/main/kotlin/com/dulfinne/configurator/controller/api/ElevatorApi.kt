@@ -1,6 +1,5 @@
 package com.dulfinne.configurator.controller.api
 
-import com.dulfinne.configurator.dto.request.ElevatorRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -10,8 +9,9 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotNull
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.multipart.MultipartFile
 
 @Tag(name = "Elevator Controller", description = "Work with elevators")
 interface ElevatorApi {
@@ -27,7 +27,10 @@ interface ElevatorApi {
             content = [Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)]
         )
     )
-    fun generateElevatorConfigurationDocument(@RequestBody request: ElevatorRequest): ResponseEntity<ByteArray>
+    fun generateElevatorConfigurationDocument(
+        @RequestPart("request") requestJson: String,
+        @RequestPart("file") file: MultipartFile
+    ): ResponseEntity<ByteArray>
 
     @Operation(
         operationId = "sendElevatorConfigurationDocumentToMail",
@@ -36,12 +39,12 @@ interface ElevatorApi {
     @ApiResponses(
         ApiResponse(
             description = "Successfully sent document to mail",
-            responseCode = "200",
-            content = [Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)]
+            responseCode = "200"
         )
     )
     fun sendElevatorConfigurationDocumentToMail(
-        @RequestParam @NotNull @Email email: String?,
-        @RequestBody request: ElevatorRequest
+        @RequestParam @NotNull @Email email: String,
+        @RequestPart("request") requestJson: String,
+        @RequestPart("file") file: MultipartFile
     ): ResponseEntity<Unit>
 }

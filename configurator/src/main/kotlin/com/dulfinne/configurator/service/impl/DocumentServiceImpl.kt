@@ -20,11 +20,11 @@ class DocumentServiceImpl(
     val minioClient: MinioClient,
     val replacementService: ReplacementService,
 ) : DocumentService {
-    override fun generateElevatorDocument(request: ElevatorRequest): ByteArray {
-        return generateFromTemplate(request)
+    override fun generateElevatorDocument(request: ElevatorRequest, file: MultipartFile): ByteArray {
+        return generateFromTemplate(request, file)
     }
 
-    fun generateFromTemplate(request: ElevatorRequest): ByteArray {
+    fun generateFromTemplate(request: ElevatorRequest, file: MultipartFile): ByteArray {
         val inputStream = minioClient.getObject(
             GetObjectArgs.builder()
                 .bucket(BucketNames.DOCUMENTS_BUCKET)
@@ -45,7 +45,7 @@ class DocumentServiceImpl(
         replacementService.replaceFloorTextInDocument(document, request.floor)
         replacementService.replaceControlPanelTextInDocument(document, request.controlPanel)
 
-        setWatermark(document)
+        addElevatorImage(document, file)
 
         val byteArrayOutputStream = ByteArrayOutputStream()
         document.saveToStream(byteArrayOutputStream, FileFormat.PDF)
@@ -55,19 +55,17 @@ class DocumentServiceImpl(
 
     private fun addElevatorImage(document: Document, image: MultipartFile) {
         val paragraph = document.addSection().addParagraph()
-        val text = paragraph.appendText(DocumentConstants.TEMPLATE_PICTURE_DESCRIPTION)
-        text.characterFormat.textColor = Color.WHITE
 
         val picture = paragraph.appendPicture(image.inputStream)
-        picture.width = 300f
+        picture.width = 400f
         picture.height = 400f
     }
 
     private fun setWatermark(document: Document) {
         val textWatermark = TextWatermark()
-        textWatermark.text = "ANKA_PETROVA"
+        textWatermark.text = "MOVEL"
         textWatermark.fontSize = 72f
-        textWatermark.color = Color.PINK
+        textWatermark.color = Color.BLUE
         document.watermark = textWatermark
     }
 }

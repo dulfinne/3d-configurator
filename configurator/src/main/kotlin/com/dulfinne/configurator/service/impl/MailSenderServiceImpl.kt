@@ -10,14 +10,15 @@ import org.springframework.core.io.ByteArrayResource
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class MailSenderServiceImpl(val mailSender: JavaMailSender, val documentService: DocumentService) : MailSenderService {
     @Value("\${spring.mail.username}")
     lateinit var myFrom: String
 
-    override fun sendElevatorDocument(to: String, request: ElevatorRequest) {
-        val document = ByteArrayResource(documentService.generateElevatorDocument(request))
+    override fun sendElevatorDocument(to: String, request: ElevatorRequest, file: MultipartFile) {
+        val document = ByteArrayResource(documentService.generateElevatorDocument(request, file))
         val configJson = jacksonObjectMapper().writeValueAsBytes(request)
         val configuration = ByteArrayResource(configJson)
 
