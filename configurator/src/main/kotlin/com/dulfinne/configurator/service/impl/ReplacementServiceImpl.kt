@@ -6,6 +6,7 @@ import com.dulfinne.configurator.dto.request.configuration.CeilingRequest
 import com.dulfinne.configurator.dto.request.configuration.ControlPanelRequest
 import com.dulfinne.configurator.dto.request.configuration.DoorsRequest
 import com.dulfinne.configurator.dto.request.configuration.FloorRequest
+import com.dulfinne.configurator.dto.request.configuration.HallRequest
 import com.dulfinne.configurator.dto.request.configuration.HandrailRequest
 import com.dulfinne.configurator.dto.request.configuration.MirrorRequest
 import com.dulfinne.configurator.dto.request.configuration.WallRequest
@@ -13,6 +14,7 @@ import com.dulfinne.configurator.entity.enums.ReplacementOption
 import com.dulfinne.configurator.entity.enums.DocumentKey
 import com.dulfinne.configurator.service.ReplacementService
 import com.dulfinne.configurator.service.TextureService
+import com.dulfinne.configurator.util.DocumentConstants
 import com.dulfinne.configurator.util.LocationConstants
 import com.spire.doc.Document
 import org.springframework.stereotype.Service
@@ -111,6 +113,37 @@ class ReplacementServiceImpl(val textureService: TextureService) : ReplacementSe
             DocumentKey.CONTROL_PANEL_SIDE to ReplacementOption.toDisplayName(controlPanel.side),
             DocumentKey.CONTROL_PANEL_LOCATION to ReplacementOption.toDisplayName(controlPanel.location),
             DocumentKey.CONTROL_PANEL_MATERIAL to getTextureNameByID(controlPanel.texture)
+        ).forEach { (key, value) ->
+            document.replace("{$key}", value, false, false)
+        }
+    }
+
+    override fun replaceHallTextInDocument(document: Document, hall: HallRequest?) {
+        if (hall == null) {
+            replaceNotConfiguredHallTextInDocument(document)
+            return
+        }
+
+        if (hall.frameExistence == ReplacementOption.NO_PORTAL.key) {
+            document.replace("{${DocumentKey.CALL_POST_FRAME_MATERIAL}}", "", false, false)
+        }
+
+        mapOf(
+            DocumentKey.CALL_POST_TYPE to ReplacementOption.toDisplayName(hall.callPostType),
+            DocumentKey.CALL_POST_FRAME to ReplacementOption.toDisplayName(hall.frameExistence),
+            DocumentKey.CALL_POST_FRAME_MATERIAL to getTextureNameByID(hall.frameTexture),
+            DocumentKey.IND_BOARD_TYPE to ReplacementOption.toDisplayName(hall.indicationBoardType),
+        ).forEach { (key, value) ->
+            document.replace("{$key}", value, false, false)
+        }
+    }
+
+    private fun replaceNotConfiguredHallTextInDocument(document: Document) {
+        mapOf(
+            DocumentKey.CALL_POST_TYPE to DocumentConstants.NOT_CONFIGURED,
+            DocumentKey.CALL_POST_FRAME to "",
+            DocumentKey.CALL_POST_FRAME_MATERIAL to "",
+            DocumentKey.IND_BOARD_TYPE to DocumentConstants.NOT_CONFIGURED,
         ).forEach { (key, value) ->
             document.replace("{$key}", value, false, false)
         }

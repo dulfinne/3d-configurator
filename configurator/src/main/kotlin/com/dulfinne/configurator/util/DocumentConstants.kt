@@ -7,4 +7,5 @@ object DocumentConstants {
     const val DEFAULT_TEXT = "Спасибо за использование сервиса для конфигурации лифтовой кабины ОАО \"Могилёвлифтмаш\". Файлы с результатами  находятся во вложениях."
     const val DEFAULT_QUESTION_FILE_NAME = "Опросный_лист.pdf"
     const val DEFAULT_CONFIG_FILE_NAME = "config.json"
+    const val NOT_CONFIGURED = "Не сконфигурирован"
 }

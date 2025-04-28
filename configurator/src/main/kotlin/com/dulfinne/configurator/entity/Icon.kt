@@ -23,6 +23,33 @@ class Icon(
     @Column(name = "url", nullable = false)
     var url: String,
 
-    @Column(name = "type", nullable = false)
-    var type: Int,
+    @Column(name = "is_door", nullable = false)
+    var isDoor: Boolean = false,
+
+    @Column(name = "is_wall", nullable = false)
+    var isWall: Boolean = false,
+
+    @Column(name = "is_floor", nullable = false)
+    var isFloor: Boolean = false,
+
+    @Column(name = "is_ceiling", nullable = false)
+    var isCeiling: Boolean = false,
+
+    @Column(name = "is_ceiling_material", nullable = false)
+    var isCeilingMaterial: Boolean = false,
+
+    @Column(name = "is_control_panel", nullable = false)
+    var isControlPanel: Boolean = false,
+
+    @Column(name = "is_handrail", nullable = false)
+    var isHandrail: Boolean = false,
+
+    @Column(name = "is_bumper", nullable = false)
+    var isBumper: Boolean = false,
+
+    @Column(name = "is_indication_board", nullable = false)
+    var isIndicationBoard: Boolean = false,
+
+    @Column(name = "is_frame", nullable = false)
+    var isFrame: Boolean = false
 )

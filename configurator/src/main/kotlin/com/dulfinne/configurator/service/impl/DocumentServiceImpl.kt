@@ -44,6 +44,7 @@ class DocumentServiceImpl(
         replacementService.replaceCeilingTextInDocument(document, request.ceiling)
         replacementService.replaceFloorTextInDocument(document, request.floor)
         replacementService.replaceControlPanelTextInDocument(document, request.controlPanel)
+        replacementService.replaceHallTextInDocument(document, request.hall)
 
         addElevatorImage(document, file)
 
@@ -57,8 +58,8 @@ class DocumentServiceImpl(
         val paragraph = document.addSection().addParagraph()
 
         val picture = paragraph.appendPicture(image.inputStream)
-        picture.width = 400f
-        picture.height = 400f
+        picture.width = 300f
+        picture.height = 300f
     }
 
     private fun setWatermark(document: Document) {

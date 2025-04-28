@@ -6,6 +6,7 @@ import com.dulfinne.configurator.dto.request.configuration.CeilingRequest
 import com.dulfinne.configurator.dto.request.configuration.ControlPanelRequest
 import com.dulfinne.configurator.dto.request.configuration.DoorsRequest
 import com.dulfinne.configurator.dto.request.configuration.FloorRequest
+import com.dulfinne.configurator.dto.request.configuration.HallRequest
 import com.dulfinne.configurator.dto.request.configuration.HandrailRequest
 import com.dulfinne.configurator.dto.request.configuration.MirrorRequest
 import com.dulfinne.configurator.dto.request.configuration.WallRequest
@@ -23,4 +24,5 @@ interface ReplacementService {
     fun replaceCeilingTextInDocument(document: Document, ceiling: CeilingRequest)
     fun replaceFloorTextInDocument(document: Document, floor: FloorRequest)
     fun replaceControlPanelTextInDocument(document: Document, controlPanel: ControlPanelRequest)
+    fun replaceHallTextInDocument(document: Document, hall: HallRequest?)
 }

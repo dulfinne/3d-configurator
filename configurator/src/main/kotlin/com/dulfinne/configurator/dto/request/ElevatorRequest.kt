@@ -6,6 +6,7 @@ import com.dulfinne.configurator.dto.request.configuration.CeilingRequest
 import com.dulfinne.configurator.dto.request.configuration.ControlPanelRequest
 import com.dulfinne.configurator.dto.request.configuration.DoorsRequest
 import com.dulfinne.configurator.dto.request.configuration.FloorRequest
+import com.dulfinne.configurator.dto.request.configuration.HallRequest
 import com.dulfinne.configurator.dto.request.configuration.HandrailRequest
 import com.dulfinne.configurator.dto.request.configuration.MirrorRequest
 import com.dulfinne.configurator.dto.request.configuration.WallRequest
@@ -19,5 +20,6 @@ data class ElevatorRequest(
     val bumpers: BumpersRequest,
     val ceiling: CeilingRequest,
     val floor: FloorRequest,
-    val controlPanel: ControlPanelRequest
+    val controlPanel: ControlPanelRequest,
+    val hall: HallRequest?
 )

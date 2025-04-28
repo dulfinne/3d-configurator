@@ -1,0 +1,3 @@
+ALTER TABLE icons
+DROP
+COLUMN is_frame
