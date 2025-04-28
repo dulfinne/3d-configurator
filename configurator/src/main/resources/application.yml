@@ -20,13 +20,12 @@ spring:
   mail:
     username: ${MAIL_APP_NAME:me@gmail.com}
     password: ${MAIL_APP_PASSWORD}
-    host: smtp.gmail.com
+    host: mail.liftmach.by
     port: 587
     properties:
       mail:
-        smth:
-          auth: true
         smtp:
+          auth: true
           starttls:
             enable: true
 
