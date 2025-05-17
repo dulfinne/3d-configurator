@@ -13,4 +13,8 @@ data class TexturePropertiesRequest(
     val roughness: Double?,
 
     val emissiveIntensity: Double?,
+
+    val tileSizeX: Double?,
+
+    val tileSizeY: Double?,
 )

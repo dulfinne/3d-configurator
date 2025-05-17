@@ -35,7 +35,6 @@ spring:
       max-request-size: 900MB
 
 minio:
-  publicUrl: http://localhost:9000
   url: http://localhost:9000
   accessKey: ${MINIO_ACCESS}
   secretKey: ${MINIO_SECRET}

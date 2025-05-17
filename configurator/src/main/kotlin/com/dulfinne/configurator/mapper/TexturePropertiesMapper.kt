@@ -9,7 +9,9 @@ fun TextureProperties.toResponse(): TexturePropertiesResponse = TexturePropertie
     bumpScale = bumpScale,
     metalness = metalness,
     roughness = roughness,
-    emissiveIntensity = emissiveIntensity
+    emissiveIntensity = emissiveIntensity,
+    tileSizeX = tileSizeX,
+    tileSizeY = tileSizeY,
 )
 
 fun TexturePropertiesRequest.toEntity(): TextureProperties = TextureProperties(
@@ -17,7 +19,9 @@ fun TexturePropertiesRequest.toEntity(): TextureProperties = TextureProperties(
     bumpScale = bumpScale,
     metalness = metalness ?: 0.0,
     roughness = roughness ?: 0.0,
-    emissiveIntensity = emissiveIntensity
+    emissiveIntensity = emissiveIntensity,
+    tileSizeX = tileSizeX,
+    tileSizeY = tileSizeY,
 )
 
 fun TextureProperties.updateFromRequest(propertiesRequest: TexturePropertiesRequest) {
@@ -25,4 +29,6 @@ fun TextureProperties.updateFromRequest(propertiesRequest: TexturePropertiesRequ
     this.metalness = propertiesRequest.metalness ?: 0.0
     this.roughness = propertiesRequest.roughness ?: 0.0
     this.emissiveIntensity = propertiesRequest.emissiveIntensity
+    this.tileSizeX = propertiesRequest.tileSizeX
+    this.tileSizeY = propertiesRequest.tileSizeY
 }

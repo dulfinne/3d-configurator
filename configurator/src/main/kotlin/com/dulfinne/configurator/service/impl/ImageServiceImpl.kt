@@ -82,7 +82,7 @@ class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioP
     }
 
     override fun getPublicImageUrl(bucketName: String, imageName: String): String {
-        return "${minioProperties.publicUrl}/$bucketName/$imageName"
+        return "/$bucketName/$imageName"
     }
 
     override fun getSignedImageUrl(bucketName: String, objectName: String): String {

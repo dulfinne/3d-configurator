@@ -34,16 +34,16 @@ enum class ReplacementOption(val key: String, val displayName: String) {
     UNIFIED("unified", "Гнутый"),
     HAVE_PORTAL("have_portal", "Есть"),
     NO_PORTAL("no_portal", "Нет"),
-    CALL_POST_CASE_1("call_post_case1", "Пост 1"),
-    CALL_POST_CASE_2("call_post_case2", "Пост 2"),
-    CALL_POST_CASE_3("call_post_case3", "Пост 3"),
-    CALL_POST_CASE_4("call_post_case4", "Пост 4"),
-    CALL_POST_CASE_5("call_post_case5", "Пост 5"),
-    CALL_POST_CASE_6("call_post_case6", "Пост 6"),
-    IND_BOARD_CASE_1("ind_board_case1", "Индикация 1"),
-    IND_BOARD_CASE_2("ind_board_case2", "Индикация 2"),
-    IND_BOARD_CASE_3("ind_board_case3", "Индикация 3"),
-    IND_BOARD_CASE_4("ind_board_case4", "Индикация 4");
+    CALL_POST_CASE_1("call_post_case1", "Врезной"),
+    CALL_POST_CASE_2("call_post_case2", "Накладной флоренс"),
+    CALL_POST_CASE_3("call_post_case3", "Накладной флоренс с табло"),
+    CALL_POST_CASE_4("call_post_case4", "Накладной флоренс дуплекс с табло"),
+    CALL_POST_CASE_5("call_post_case5", "MOVEL 1 кнопка"),
+    CALL_POST_CASE_6("call_post_case6", "MOVEL 2 кнопки"),
+    IND_BOARD_CASE_1("ind_board_case1", "Накладное. Вариант 1"),
+    IND_BOARD_CASE_2("ind_board_case2", "Врезное. Вариант 1"),
+    IND_BOARD_CASE_3("ind_board_case3", "Врезное. Вариант 2"),
+    IND_BOARD_CASE_4("ind_board_case4", "Накладное. Вариант 2");
 
     companion object {
         private val map = entries.associateBy(ReplacementOption::key)

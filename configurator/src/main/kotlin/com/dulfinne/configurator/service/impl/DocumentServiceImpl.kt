@@ -58,8 +58,8 @@ class DocumentServiceImpl(
         val paragraph = document.addSection().addParagraph()
 
         val picture = paragraph.appendPicture(image.inputStream)
-        picture.width = 300f
-        picture.height = 300f
+        picture.width = 350f
+        picture.height = 350f
     }
 
     private fun setWatermark(document: Document) {

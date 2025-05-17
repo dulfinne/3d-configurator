@@ -27,4 +27,10 @@ class TextureProperties(
 
     @Column(name = "emissive_intensity")
     var emissiveIntensity: Double?,
+
+    @Column(name = "tile_size_x")
+    var tileSizeX: Double?,
+
+    @Column(name = "tile_size_y")
+    var tileSizeY: Double?,
 )
