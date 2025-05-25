@@ -30,8 +30,10 @@ class SecurityConfig(val keycloakProperties: KeycloakProperties) {
                         "/api/v1/design-projects/**",
                         "/api/v1/icons/**",
                         "/api/v1/project-templates/**",
-                        "/api/v1/textures/**"
+                        "/api/v1/textures/**",
                     )
+                    .permitAll()
+                    .requestMatchers("/api/v1/light-settings/**")
                     .permitAll()
                     .requestMatchers(HttpMethod.OPTIONS)
                     .permitAll()

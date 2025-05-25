@@ -12,6 +12,7 @@ import com.dulfinne.configurator.dto.request.configuration.MirrorRequest
 import com.dulfinne.configurator.dto.request.configuration.WallRequest
 import com.dulfinne.configurator.entity.enums.ReplacementOption
 import com.dulfinne.configurator.entity.enums.DocumentKey
+import com.dulfinne.configurator.service.ProjectTemplateService
 import com.dulfinne.configurator.service.ReplacementService
 import com.dulfinne.configurator.service.TextureService
 import com.dulfinne.configurator.util.DocumentConstants
@@ -23,7 +24,7 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @Service
-class ReplacementServiceImpl(val textureService: TextureService) : ReplacementService {
+class ReplacementServiceImpl(val textureService: TextureService, val projectTemplateService: ProjectTemplateService) : ReplacementService {
     override fun replaceDateTextInDocument(document: Document) {
         val currentDate = LocalDate.now()
         val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -36,10 +37,11 @@ class ReplacementServiceImpl(val textureService: TextureService) : ReplacementSe
         mapOf(
             DocumentKey.CABIN_SIZE to cabin.size,
             DocumentKey.CABIN_TYPE to cabin.type,
-            DocumentKey.CABIN_OPENING_TYPE to cabin.openingType
+            DocumentKey.CABIN_OPENING_TYPE to cabin.openingType,
         ).forEach { (key, value) ->
             document.replace("{$key}", ReplacementOption.toDisplayName(value), false, false)
         }
+        document.replace("{${DocumentKey.DESIGN_PROJECT}}", getProjectTemplateNameById(cabin.designProject), false, false)
     }
 
     override fun replaceWallTextInDocument(document: Document, wall: WallRequest) {
@@ -152,6 +154,11 @@ class ReplacementServiceImpl(val textureService: TextureService) : ReplacementSe
     private fun getTextureNameByID(id: UUID): String {
         val texture = textureService.getTextureById(id)
         return texture.name
+    }
+
+    private fun getProjectTemplateNameById(id: UUID): String {
+        val project = projectTemplateService.getProjectTemplateById(id)
+        return project.name
     }
 
     private fun getLocationText(left: Boolean, right: Boolean, back: Boolean): String {

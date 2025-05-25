@@ -68,4 +68,10 @@
         <tagDatabase tag="v.1.8"/>
     </changeSet>
 
+    <include file="v-1.9/db.changelog-v.1.9.xml" relativeToChangelogFile="true"/>
+
+    <changeSet id="25" author="yana zhukava">
+        <tagDatabase tag="v.1.9"/>
+    </changeSet>
+
 </databaseChangeLog>

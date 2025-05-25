@@ -17,4 +17,8 @@ object ExceptionMessages {
     const val PROJECT_TEMPLATE_EXISTS_NAME = "Project template already exists: name = %s"
 
     const val FILE_NAME_NOT_FOUND = "File name not found"
+
+    const val LIGHT_SETTINGS_NOT_FOUND = "Light settings are not created yet"
+    const val LIGHT_SETTINGS_EXISTS = "Light settings already set"
+
 }

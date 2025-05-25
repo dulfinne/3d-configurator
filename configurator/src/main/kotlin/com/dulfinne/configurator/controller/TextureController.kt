@@ -34,19 +34,19 @@ class TextureController(val textureService: TextureService) : TextureApi {
         @RequestParam(value = "size", defaultValue = "6") size: Int
     ): PaginatedResponse<TextureResponse> {
         val textureResponsePage = textureService.getAllTextures(page, size)
-        return textureResponsePage;
+        return textureResponsePage
     }
 
     @GetMapping("/{id}")
     override fun getTexture(@PathVariable id: UUID): TextureResponse {
         val textureResponse = textureService.getTextureById(id)
-        return textureResponse;
+        return textureResponse
     }
 
     @GetMapping("/icon/{id}")
     override fun getTextureByIconId(@PathVariable id: UUID): TextureResponse {
         val textureResponse = textureService.getTextureByIconId(id)
-        return textureResponse;
+        return textureResponse
     }
 
     @PostMapping
@@ -61,7 +61,7 @@ class TextureController(val textureService: TextureService) : TextureApi {
         @Valid @ModelAttribute request: UpdateTextureRequest
     ): TextureResponse {
         val textureResponse = textureService.updateTexture(uuid, request)
-        return textureResponse;
+        return textureResponse
     }
 
     @PutMapping("/{uuid}/name")
@@ -70,12 +70,12 @@ class TextureController(val textureService: TextureService) : TextureApi {
         @Valid @RequestBody request: NameRequest
     ): TextureResponse {
         val textureResponse = textureService.updateTextureName(uuid, request)
-        return textureResponse;
+        return textureResponse
     }
 
     @DeleteMapping("/{uuid}")
     override fun deleteTexture(@PathVariable uuid: UUID): ResponseEntity<Unit> {
-        textureService.deleteTextureById(uuid);
+        textureService.deleteTextureById(uuid)
         return ResponseEntity.noContent().build()
     }
 }

@@ -6,6 +6,7 @@ enum class DocumentKey {
     CABIN_SIZE,
     CABIN_TYPE,
     CABIN_OPENING_TYPE,
+    DESIGN_PROJECT,
 
     WALL_BACK_MATERIAL,
     WALL_FRONT_MATERIAL,

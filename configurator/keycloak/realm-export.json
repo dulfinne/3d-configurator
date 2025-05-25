@@ -5,9 +5,9 @@
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,
-  "accessTokenLifespan": 3600,
+  "accessTokenLifespan": 14400,
   "accessTokenLifespanForImplicitFlow": 900,
-  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionIdleTimeout": 18000,
   "ssoSessionMaxLifespan": 36000,
   "ssoSessionIdleTimeoutRememberMe": 0,
   "ssoSessionMaxLifespanRememberMe": 0,
@@ -229,8 +229,8 @@
           "composites": {
             "client": {
               "realm-management": [
-                "view-users",
                 "view-clients",
+                "view-users",
                 "query-groups",
                 "view-realm",
                 "manage-authorization",
@@ -244,8 +244,8 @@
                 "manage-clients",
                 "manage-events",
                 "view-events",
-                "view-identity-providers",
                 "create-client",
+                "view-identity-providers",
                 "query-clients"
               ]
             }
@@ -827,7 +827,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "egD63JWeQQLVP7OY8P2qAPR5eIwvR5Zp",
+      "secret": "**********",
       "redirectUris": [
         "http://localhost:8081/*",
         "*"
@@ -1693,14 +1693,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "oidc-usermodel-property-mapper",
-            "saml-user-attribute-mapper",
-            "saml-user-property-mapper",
             "oidc-sha256-pairwise-sub-mapper",
+            "saml-role-list-mapper",
+            "saml-user-property-mapper",
             "oidc-full-name-mapper",
+            "oidc-usermodel-property-mapper",
             "oidc-usermodel-attribute-mapper",
-            "oidc-address-mapper",
-            "saml-role-list-mapper"
+            "saml-user-attribute-mapper",
+            "oidc-address-mapper"
           ]
         }
       },
@@ -1712,14 +1712,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "oidc-address-mapper",
-            "oidc-full-name-mapper",
-            "oidc-usermodel-attribute-mapper",
-            "oidc-usermodel-property-mapper",
             "saml-role-list-mapper",
+            "oidc-full-name-mapper",
+            "saml-user-property-mapper",
+            "oidc-usermodel-attribute-mapper",
+            "oidc-address-mapper",
             "oidc-sha256-pairwise-sub-mapper",
             "saml-user-attribute-mapper",
-            "saml-user-property-mapper"
+            "oidc-usermodel-property-mapper"
           ]
         }
       },
