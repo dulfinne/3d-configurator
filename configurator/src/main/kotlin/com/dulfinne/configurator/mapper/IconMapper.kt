@@ -48,5 +48,5 @@ fun Icon.updateFromRequest(request: UpdateIconRequest) {
     this.isHandrail = request.isHandrail
     this.isBumper = request.isBumper
     this.isIndicationBoard = request.isIndicationBoard
-    this.isFrame = isFrame
+    this.isFrame = request.isFrame
 }

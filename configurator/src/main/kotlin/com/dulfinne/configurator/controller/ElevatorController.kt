@@ -49,7 +49,7 @@ class ElevatorController(
         @RequestPart("file") file: MultipartFile
     ): ResponseEntity<Unit> {
         val request = objectMapper.readValue(requestJson, ElevatorRequest::class.java)
-        mailSender.sendElevatorDocument(email, request, file)
+        mailSender.sendElevatorDocument(email, request, file, requestJson)
         return ResponseEntity.ok().build()
     }
 }

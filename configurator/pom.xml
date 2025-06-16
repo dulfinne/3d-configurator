@@ -22,7 +22,6 @@
         <swagger-core.version>1.6.10</swagger-core.version>
         <swagger-core-v3.version>2.2.8</swagger-core-v3.version>
         <minio.version>8.5.17</minio.version>
-        <shedlock.version>5.13.0</shedlock.version>
         <spire-dock.version>5.3.2</spire-dock.version>
         <tika-core.version>3.1.0</tika-core.version>
         <keycloak.version>20.0.2</keycloak.version>
@@ -141,18 +140,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.javacrumbs.shedlock</groupId>
-            <artifactId>shedlock-spring</artifactId>
-            <version>${shedlock.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.javacrumbs.shedlock</groupId>
-            <artifactId>shedlock-provider-jdbc-template</artifactId>
-            <version>${shedlock.version}</version>
         </dependency>
 
         <dependency>

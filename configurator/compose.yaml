@@ -2,17 +2,26 @@ name: 3d-configurator
 
 services:
 
-  nginx:
-    image: nginx:stable-alpine
+  configurator-service:
+    container_name: configurator-service
+    image: dulfinne/configurator-service:latest
     ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - './nginx.conf:/etc/nginx/nginx.conf'
+      - "8090:8090"
+    env_file:
+      - ./env/configurator-service.env
     depends_on:
-      - configurator-service
-      - frontend
-      - frontend-admin
+      - postgres
+
+  postgres:
+    image: postgres:17.0
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    env_file:
+      - ./env/postgres.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-database:/docker-entrypoint-initdb.d
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0
@@ -25,29 +34,20 @@ services:
     volumes:
       - ./keycloak/:/opt/keycloak/data/import/
 
-  postgres:
-    image: postgres:17.0
-    container_name: postgres
-    expose:
-      - "5432"
-    env_file:
-      - ./env/postgres.env
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init-database:/docker-entrypoint-initdb.d
-
-  configurator-service:
-    container_name: configurator-service
-    image: dulfinne/configurator-service:latest
-    expose:
-      - "8090"
-    env_file:
-      - ./env/configurator-service.env
+      - './nginx.conf:/etc/nginx/nginx.conf'
     depends_on:
-      - postgres
+      - configurator-service
+      - frontend
+      - frontend-admin
 
   minio:
-    image: minio/minio:latest
+    image: minio/minio:RELEASE.2025-02-18T16-25-55Z
     container_name: minio
     env_file:
       - ./env/minio.env
@@ -61,14 +61,14 @@ services:
   frontend:
     image: evgeniysavickiy/configurator-frontend
     container_name: configurator-frontend
-    expose:
-      - "80"
+    ports:
+      - "3000:80"
 
   frontend-admin:
     image: evgeniysavickiy/configurator-admin:latest
     container_name: configurator-admin
-    expose:
-      - "80"
+    ports:
+      - "8088:80"
 
 volumes:
   postgres_data:

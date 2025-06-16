@@ -34,3 +34,4 @@ class TextureProperties(
     @Column(name = "tile_size_y")
     var tileSizeY: Double?,
 )
+

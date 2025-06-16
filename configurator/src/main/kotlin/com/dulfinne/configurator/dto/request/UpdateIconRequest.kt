@@ -26,5 +26,7 @@ data class UpdateIconRequest(
 
     val isBumper: Boolean = false,
 
-    val isIndicationBoard: Boolean = false
+    val isIndicationBoard: Boolean = false,
+
+    val isFrame: Boolean = false
 )

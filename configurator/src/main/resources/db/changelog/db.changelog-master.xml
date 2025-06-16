@@ -74,4 +74,10 @@
         <tagDatabase tag="v.1.9"/>
     </changeSet>
 
+    <include file="v-2.0/db.changelog-v.2.0.xml" relativeToChangelogFile="true"/>
+
+    <changeSet id="27" author="yana zhukava">
+        <tagDatabase tag="v.2.0"/>
+    </changeSet>
+
 </databaseChangeLog>

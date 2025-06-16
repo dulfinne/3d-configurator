@@ -38,6 +38,12 @@ class DesignProjectServiceImpl(val designProjectRepository: DesignProjectReposit
         return project.toResponse()
     }
 
+    private fun getDesignProjectIfExists(id: UUID): DesignProject {
+        return designProjectRepository.findByIdOrNull(id)
+            ?: throw EntityNotFoundException(ExceptionMessages.DESIGN_PROJECT_NOT_FOUND_ID.format(id))
+
+    }
+
     @Transactional
     override fun createDesignProject(request: DesignProjectRequest): DesignProjectResponse {
         val designProject = request.toEntity()
@@ -67,11 +73,7 @@ class DesignProjectServiceImpl(val designProjectRepository: DesignProjectReposit
         }
     }
 
-    private fun getDesignProjectIfExists(id: UUID): DesignProject {
-        return designProjectRepository.findByIdOrNull(id)
-            ?: throw EntityNotFoundException(ExceptionMessages.DESIGN_PROJECT_NOT_FOUND_ID.format(id))
 
-    }
 
     private fun checkNameUniqueness(name: String) {
         designProjectRepository.findByName(name)?.let {

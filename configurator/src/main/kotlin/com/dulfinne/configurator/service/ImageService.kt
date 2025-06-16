@@ -8,6 +8,5 @@ interface ImageService {
     fun uploadOrKeep(bucket: String, textureName: String, newFile: MultipartFile?, oldUrl: String?, needRemovement: Boolean): String?
     fun deleteImage(bucketName: String, imageName: String)
     fun getPublicImageUrl(bucketName: String, imageName: String): String
-    fun getSignedImageUrl(bucketName: String, objectName: String): String
     fun renameFile(bucketName: String, newName: String, oldName: String, oldUrl: String?): String?
 }

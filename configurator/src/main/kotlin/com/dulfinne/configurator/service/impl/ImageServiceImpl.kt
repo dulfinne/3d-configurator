@@ -7,13 +7,11 @@ import com.dulfinne.configurator.util.ExceptionMessages
 import com.dulfinne.configurator.util.MinioConstants
 import io.minio.BucketExistsArgs
 import io.minio.GetObjectArgs
-import io.minio.GetPresignedObjectUrlArgs
 import io.minio.MakeBucketArgs
 import io.minio.MinioClient
 import io.minio.PutObjectArgs
 import io.minio.RemoveObjectArgs
 import io.minio.SetBucketPolicyArgs
-import io.minio.http.Method
 import jakarta.persistence.EntityNotFoundException
 import org.apache.tika.Tika
 import org.springframework.stereotype.Service
@@ -21,6 +19,15 @@ import org.springframework.web.multipart.MultipartFile
 
 @Service
 class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioProperties) : ImageService {
+
+    override fun deleteImage(bucketName: String, imageName: String) {
+        minioClient.removeObject(
+            RemoveObjectArgs.builder()
+                .bucket(bucketName)
+                .`object`(imageName)
+                .build()
+        )
+    }
 
     override fun uploadImage(bucketName: String, imageName: String, file: MultipartFile): String {
         if (!checkBucketExists(bucketName)) {
@@ -47,14 +54,6 @@ class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioP
             else -> oldUrl
         }
 
-    override fun deleteImage(bucketName: String, imageName: String) {
-        minioClient.removeObject(
-            RemoveObjectArgs.builder()
-                .bucket(bucketName)
-                .`object`(imageName)
-                .build()
-        )
-    }
 
     override fun renameFile(bucketName: String, newName: String, oldName: String, oldUrl: String?): String? {
         if (oldUrl == null) {
@@ -83,17 +82,6 @@ class ImageServiceImpl(val minioClient: MinioClient, val minioProperties: MinioP
 
     override fun getPublicImageUrl(bucketName: String, imageName: String): String {
         return "/$bucketName/$imageName"
-    }
-
-    override fun getSignedImageUrl(bucketName: String, objectName: String): String {
-        val url = minioClient.getPresignedObjectUrl(
-            GetPresignedObjectUrlArgs.builder()
-                .method(Method.GET)
-                .bucket(bucketName)
-                .`object`(objectName)
-                .build()
-        )
-        return url.toString()
     }
 
     private fun saveImage(name: String, bucketName: String, file: MultipartFile) {

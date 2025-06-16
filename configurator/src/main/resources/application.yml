@@ -39,10 +39,6 @@ minio:
   accessKey: ${MINIO_ACCESS}
   secretKey: ${MINIO_SECRET}
 
-scheduler:
-  link-updating:
-    cron: 0 0 0 * * 0
-
 keycloak:
   client:
     id: ${KEYCLOAK_CLIENT_NAME}
